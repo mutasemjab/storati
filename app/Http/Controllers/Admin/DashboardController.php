@@ -43,14 +43,9 @@ class DashboardController extends Controller
             
         $totalLateRequests = $lateOrders;
         
-        $lowStockProducts = VoucherProduct::getLowStockProducts();
-        $lowStockCount = VoucherProduct::getLowStockCount();
-        $minimumQuantityThreshold = Setting::getValue('minimum_to_notify_me_for_quantity_products', 2);
-        
+       
         return view('admin.dashboard', compact(
-            'lowStockProducts',
-            'lowStockCount',
-            'minimumQuantityThreshold',
+           
             'usersCount',
             'totalOrders',
             'activeOrders',

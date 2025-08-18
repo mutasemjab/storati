@@ -229,52 +229,9 @@
 @endsection
 
 @section('content')
-<!-- Low Stock Alert Banner (if any products are low) -->
-@if($lowStockCount > 0)
-<div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-exclamation-triangle warning-icon"></i>
-        <div>
-            <strong>{{ __('messages.low_stock_warning') }}!</strong>
-            {{ __('messages.products_below_minimum', ['count' => $lowStockCount, 'minimum' => $minimumQuantityThreshold]) }}
-        </div>
-    </div>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div>
-@endif
 
 <div class="dashboard">
-    <!-- Low Stock Products Warning Card -->
-    @if($lowStockCount > 0)
-    <div class="card low-stock warning">
-        <div class="card-header-with-badge">
-            <h2>
-                <i class="fas fa-exclamation-triangle warning-icon"></i>
-                {{ __('messages.low_stock_products') }}
-            </h2>
-            <span class="notification-badge">{{ $lowStockCount }}</span>
-        </div>
-        <p class="low-stock-warning">{{ $lowStockCount }}</p>
-        <div class="small-text">{{ __('messages.products_below_minimum_quantity', ['minimum' => $minimumQuantityThreshold]) }}</div>
-        
-        @if($lowStockProducts->count() > 0)
-        <div class="low-stock-list">
-            @foreach($lowStockProducts->take(5) as $product)
-            <div class="low-stock-item">
-                <span class="product-name">{{ $product->name }}</span>
-                <span class="quantity">{{ $product->quantity }}</span>
-            </div>
-            @endforeach
-            
-            @if($lowStockProducts->count() > 5)
-            <a href="{{ route('products.index', ['low_stock' => 1]) }}" class="view-all-link">
-                {{ __('messages.view_all_low_stock_products') }}
-            </a>
-            @endif
-        </div>
-        @endif
-    </div>
-    @endif
+  
 
     <!-- Customers Count -->
     <div class="card customers">
