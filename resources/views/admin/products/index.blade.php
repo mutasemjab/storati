@@ -37,7 +37,7 @@
                                         <td>{{ $loop->iteration + ($products->currentPage() - 1) * $products->perPage() }}</td>
                                         <td>
                                             @if($product->images->first())
-                                                <img src="{{ asset('storage/' . $product->images->first()->photo) }}" 
+                                                <img src="{{ asset('assets/admin/uploads/'. $product->images->first()->photo) }}" 
                                                      alt="{{ app()->getLocale() == 'ar' ? $product->name_ar : $product->name_en }}" 
                                                      class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
                                             @else

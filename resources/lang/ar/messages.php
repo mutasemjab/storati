@@ -455,6 +455,39 @@ return [
     "Remove" => "إزالة",
     "Please_Add_At_Least_One_Product" => "الرجاء إضافة منتج واحد على الأقل",
 
+     'Video' => 'فيديو',
+    'Caption' => 'التسمية التوضيحية',
+    'Optional' => 'اختياري',
+    'Cancel' => 'إلغاء',
+    'characters' => 'حرف',
+    'Celebrity' => 'المشاهير',
+    
+    // Stories
+    'Celebrity Stories' => 'قصص المشاهير',
+    'Add New Story' => 'إضافة قصة جديدة',
+    'Add First Story' => 'إضافة أول قصة',
+    'Story' => 'قصة',
+    'No Stories Available' => 'لا توجد قصص متاحة',
+    'Be the first to add a celebrity story' => 'كن أول من يضيف قصة مشاهير',
+    'Select Celebrity' => 'اختر مشهور',
+    'Story Type' => 'نوع القصة',
+    'Upload Media' => 'رفع الوسائط',
+    'Click to browse or drag and drop' => 'انقر للتصفح أو اسحب وأفلت',
+    'Write a caption for your story...' => 'اكتب تسمية توضيحية لقصتك...',
+    'Add Story' => 'إضافة قصة',
+    'Uploading...' => 'جاري الرفع...',
+    
+    // File upload
+    'Max 20MB, JPG, PNG, GIF' => 'حد أقصى 20 ميجابايت، JPG، PNG، GIF',
+    'Max 20MB, MP4, MOV, AVI' => 'حد أقصى 20 ميجابايت، MP4، MOV، AVI',
+    'Your browser does not support the video tag' => 'متصفحك لا يدعم علامة الفيديو',
+    
+    // Messages
+    'Story added successfully' => 'تمت إضافة القصة بنجاح',
+    'Story deleted successfully' => 'تم حذف القصة بنجاح',
+    'Story activated successfully' => 'تم تفعيل القصة بنجاح',
+    'Story deactivated successfully' => 'تم إلغاء تفعيل القصة بنجاح',
+
     ""=>"",
     ""=>"",
     ""=>"",

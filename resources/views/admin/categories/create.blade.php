@@ -9,7 +9,7 @@
                     <h4>{{ __('messages.Add_Category') }}</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('categories.store') }}" method="POST">
+                    <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="mb-3">
@@ -70,6 +70,36 @@
                                 </div>
                             @enderror
                         </div>
+
+                          <div class="col-md-12">
+                                <div class="card">
+                                   
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                {{  __('messages.Photo') }}
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="file" class="form-control @error('photo') is-invalid @enderror" 
+                                                   name="photo" accept="image/*" {{'required' }}>
+                                            <small class="form-text text-muted">
+                                                {{ __('messages.Allowed_Formats') }}: JPG, JPEG, PNG, GIF
+                                            </small>
+                                            @error('photo')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <!-- New Image Preview -->
+                                        <div id="imagePreview" class="mt-3" style="display: none;">
+                                            <label class="form-label">{{ __('messages.New_Preview') }}:</label>
+                                            <img id="previewImg" src="" alt="Preview" 
+                                                 class="img-fluid rounded border" 
+                                                 style="width: 100%; height: 200px; object-fit: cover;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">

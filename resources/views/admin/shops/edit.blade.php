@@ -70,7 +70,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">{{ __('messages.Current_Photo') }}:</label>
                                                 <div class="text-center">
-                                                    <img src="{{ asset($shop->photo) }}" 
+                                                    <img src="{{ asset('assets/admin/uploads/'.$shop->photo) }}" 
                                                          alt="{{ $shop->name_en }}" 
                                                          class="img-fluid rounded border" 
                                                          style="width: 100%; height: 200px; object-fit: cover;">

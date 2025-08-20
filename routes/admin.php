@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DeliveryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CelebrityStoriesController;
 use App\Http\Controllers\Admin\NoteVoucherController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -140,6 +141,28 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::post('/reject/{id}', [WithdrawalRequestController::class, 'reject'])->name('admin.withdrawals.reject');
 
         Route::post('/wallet/update', [UserController::class, 'updateWallet'])->name('wallet.update');
+
+
+        Route::prefix('celebrity-stories')->name('celebrity-stories.')->group(function () {
+            Route::get('/', [CelebrityStoriesController::class, 'index'])->name('index');
+            Route::get('/create', [CelebrityStoriesController::class, 'create'])->name('create');
+            Route::post('/', [CelebrityStoriesController::class, 'store'])->name('store');
+            Route::delete('/{story}', [CelebrityStoriesController::class, 'destroy'])->name('destroy');
+            Route::patch('/{story}/toggle-active', [CelebrityStoriesController::class, 'toggleActive'])->name('toggle-active');
+        });
+
+        Route::get('/celebrities/{celebrity}/stories/{story}', [CelebrityStoriesController::class, 'show'])->name('celebrity-stories.show');
+
+
+
+
+
+
+
+
+
+
+
     });
 });
 

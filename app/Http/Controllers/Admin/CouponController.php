@@ -58,7 +58,6 @@ class CouponController extends Controller
             'amount' => 'required|numeric|min:0',
             'minimum_total' => 'required|numeric|min:0',
             'expired_at' => 'required',
-            'type' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -107,7 +106,6 @@ class CouponController extends Controller
             'amount' => 'required|numeric|min:0',
             'minimum_total' => 'required|numeric|min:0',
             'expired_at' => 'required',
-            'type' => 'required',
         ]);
 
         if ($validator->fails()) {

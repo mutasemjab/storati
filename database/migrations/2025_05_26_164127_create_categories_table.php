@@ -17,14 +17,15 @@ return new class extends Migration
             $table->id();
             $table->string('name_en');
             $table->string('name_ar');
+            $table->string('photo');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
 
           DB::table('categories')->insert([
-            ['name_en'=>'Hair Care','name_ar'=>'عناية شعر'],
-            ['name_en'=>'Make up','name_ar'=>'مكياج']
+            ['name_en'=>'Hair Care','name_ar'=>'عناية شعر','photo'=>'images.png'],
+            ['name_en'=>'Make up','name_ar'=>'مكياج','photo'=>'images.png']
           ]);
     }
 

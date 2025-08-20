@@ -29,9 +29,7 @@ class ProductController extends Controller
                     $q->where('name_en', 'LIKE', "%{$searchTerm}%")
                       ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%")
                       ->orWhere('description_en', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('description_ar', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('specification_en', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('specification_ar', 'LIKE', "%{$searchTerm}%");
+                      ->orWhere('description_ar', 'LIKE', "%{$searchTerm}%");
                 });
             }
 

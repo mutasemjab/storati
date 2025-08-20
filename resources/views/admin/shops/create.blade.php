@@ -38,7 +38,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">{{ __('messages.Name_English') }} <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control @error('name_en') is-invalid @enderror" 
-                                                           name="name_en" value="{{ old('name_en', $shop->name_en) }}" required>
+                                                           name="name_en" value="{{ old('name_en') }}" required>
                                                     @error('name_en')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
@@ -48,7 +48,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">{{ __('messages.Name_Arabic') }} <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control @error('name_ar') is-invalid @enderror" 
-                                                           name="name_ar" value="{{ old('name_ar', $shop->name_ar) }}" required>
+                                                           name="name_ar" value="{{ old('name_ar') }}" required>
                                                     @error('name_ar')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
@@ -65,26 +65,15 @@
                                         <h5>{{ __('messages.Shop_Photo') }}</h5>
                                     </div>
                                     <div class="card-body">
-                                        <!-- Current Photo -->
-                                        @if($shop->photo)
-                                            <div class="mb-3">
-                                                <label class="form-label">{{ __('messages.Current_Photo') }}:</label>
-                                                <div class="text-center">
-                                                    <img src="{{ asset($shop->photo) }}" 
-                                                         alt="{{ $shop->name_en }}" 
-                                                         class="img-fluid rounded border" 
-                                                         style="width: 100%; height: 200px; object-fit: cover;">
-                                                </div>
-                                            </div>
-                                        @endif
+                                     
 
                                         <div class="mb-3">
                                             <label class="form-label">
-                                                {{ $shop->photo ? __('messages.Change_Photo') : __('messages.Photo') }}
-                                                @if(!$shop->photo)<span class="text-danger">*</span>@endif
+                                                {{  __('messages.Photo') }}
+                                                <span class="text-danger">*</span>
                                             </label>
                                             <input type="file" class="form-control @error('photo') is-invalid @enderror" 
-                                                   name="photo" accept="image/*" {{ !$shop->photo ? 'required' : '' }}>
+                                                   name="photo" accept="image/*" {{'required' }}>
                                             <small class="form-text text-muted">
                                                 {{ __('messages.Allowed_Formats') }}: JPG, JPEG, PNG, GIF
                                             </small>

@@ -55,17 +55,18 @@ Route::group(['prefix' => 'v1/user'], function () {
     Route::get('/shops/{id}', [ShopController::class, 'getProductsFromShop']);
 
     Route::get('/celebrities', [CelebrityController::class, 'index']);
-    Route::get('/celebrities/{id}', [CelebrityController::class, 'getProductsFromBrand']);
+    Route::get('/celebrities/{id}', [CelebrityController::class, 'getProductsFromCelebrity']);
 
     Route::get('/products/{id}', [ProductController::class, 'productDetails']);
     Route::get('product/search', [ProductController::class, 'searchProduct']);
 
-
+    Route::get('/home', [HomeController::class, 'getHomeData']);
 
     // Auth Route
     Route::group(['middleware' => ['auth:user-api']], function () {
 
         Route::get('/active', [AuthController::class, 'active']);
+        Route::post('/stories/{storyId}/view', [HomeController::class, 'viewStory']);
 
         // image for chat
         Route::get('/uploadPhotoVoice', [UploadPhotoVoiceController::class, 'index']);

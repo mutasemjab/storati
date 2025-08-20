@@ -516,6 +516,39 @@ return [
     "Quantity" => "Quantity",
     "Remove" => "Remove",
     "Please_Add_At_Least_One_Product" => "Please add at least one product",
+
+    'Video' => 'Video',
+    'Caption' => 'Caption',
+    'Optional' => 'Optional',
+    'Cancel' => 'Cancel',
+    'characters' => 'characters',
+    'Celebrity' => 'Celebrity',
+    
+    // Stories
+    'Celebrity Stories' => 'Celebrity Stories',
+    'Add New Story' => 'Add New Story',
+    'Add First Story' => 'Add First Story',
+    'Story' => 'Story',
+    'No Stories Available' => 'No Stories Available',
+    'Be the first to add a celebrity story' => 'Be the first to add a celebrity story',
+    'Select Celebrity' => 'Select Celebrity',
+    'Story Type' => 'Story Type',
+    'Upload Media' => 'Upload Media',
+    'Click to browse or drag and drop' => 'Click to browse or drag and drop',
+    'Write a caption for your story...' => 'Write a caption for your story...',
+    'Add Story' => 'Add Story',
+    'Uploading...' => 'Uploading...',
+    
+    // File upload
+    'Max 20MB, JPG, PNG, GIF' => 'Max 20MB, JPG, PNG, GIF',
+    'Max 20MB, MP4, MOV, AVI' => 'Max 20MB, MP4, MOV, AVI',
+    'Your browser does not support the video tag' => 'Your browser does not support the video tag',
+    
+    // Messages
+    'Story added successfully' => 'Story added successfully',
+    'Story deleted successfully' => 'Story deleted successfully',
+    'Story activated successfully' => 'Story activated successfully',
+    'Story deactivated successfully' => 'Story deactivated successfully',
     '' => '',
     '' => '',
     '' => '',

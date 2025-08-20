@@ -30,7 +30,6 @@
                             <th>{{ __('messages.amount') }}</th>
                             <th>{{ __('messages.minimum_total') }}</th>
                             <th>{{ __('messages.expired_at') }}</th>
-                            <th>{{ __('messages.Type') }}</th>
                             <th>{{ __('messages.Actions') }}</th>
                         </tr>
                     </thead>
@@ -44,7 +43,6 @@
                             <td>{{ $coupon->amount }}</td>
                             <td>{{ $coupon->minimum_total }}</td>
                             <td>{{ $coupon->expired_at }}</td>
-                            <td>{{ $coupon->type == 1 ? 'Product' : 'Provider' }}</td>
                            
                             <td>
                                 <div class="btn-group">

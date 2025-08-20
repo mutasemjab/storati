@@ -12,23 +12,13 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
+             
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>{{ __('messages.ID') }}</th>
+                                    <th>{{ __('messages.photo') }}</th>
                                     <th>{{ __('messages.Name_English') }}</th>
                                     <th>{{ __('messages.Name_Arabic') }}</th>
                                     <th>{{ __('messages.Parent_Category') }}</th>
@@ -39,6 +29,18 @@
                                 @forelse($categories as $category)
                                     <tr>
                                         <td>{{ $category->id }}</td>
+                                         <td>
+                                            @if($category->photo)
+                                                <img src="{{ asset('assets/admin/uploads/'.$category->photo) }}" 
+                                                     alt="{{ $category->name_en }}" 
+                                                     class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                            @else
+                                                <div class="bg-light d-flex align-items-center justify-content-center" 
+                                                     style="width: 60px; height: 60px;">
+                                                    <i class="fas fa-store text-muted"></i>
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($category->category_id)
                                                 <span class="text-muted">└─</span>

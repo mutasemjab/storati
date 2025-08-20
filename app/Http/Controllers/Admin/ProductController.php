@@ -19,8 +19,6 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
 
-    
-
     public function index()
     {
         $products = Product::with(['category', 'celebrity', 'brand', 'shop', 'images'])
@@ -56,7 +54,7 @@ class ProductController extends Controller
             'celebrity_id' => 'nullable|exists:celebrities,id',
             'brand_id' => 'nullable|exists:brands,id',
             'shop_id' => 'nullable|exists:shops,id',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
             'variations.*.color_id' => 'required_with:variations|exists:colors,id',
             'variations.*.size_id' => 'required_with:variations|exists:sizes,id',
             'variations.*.price_adjustment' => 'nullable|numeric',
@@ -150,7 +148,7 @@ class ProductController extends Controller
             'celebrity_id' => 'nullable|exists:celebrities,id',
             'brand_id' => 'nullable|exists:brands,id',
             'shop_id' => 'nullable|exists:shops,id',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
             'variations.*.color_id' => 'required_with:variations|exists:colors,id',
             'variations.*.size_id' => 'required_with:variations|exists:sizes,id',
             'variations.*.price_adjustment' => 'nullable|numeric',

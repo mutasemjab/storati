@@ -126,7 +126,7 @@
                                             @foreach($product->images as $image)
                                                 <div class="col-md-3 mb-3">
                                                     <div class="position-relative">
-                                                        <img src="{{ asset('storage/' . $image->photo) }}" 
+                                                        <img src="{{ asset('assets/admin/uploads/'.$image->photo) }}" 
                                                              class="img-fluid rounded" 
                                                              style="width: 100%; height: 150px; object-fit: cover;">
                                                         <div class="position-absolute top-0 end-0 p-1">

@@ -31,6 +31,9 @@ return new class extends Migration
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->unsignedBigInteger('shop_id')->nullable();
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
+
+            $table->tinyInteger('my_collabs')->default(1); // 1 yes //2 no
+            $table->tinyInteger('is_featured')->default(1); // 1 yes //2 no
             $table->timestamps();
         });
     }

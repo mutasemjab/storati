@@ -4,7 +4,7 @@
     <a href="{{ route('admin.dashboard') }}" class="brand-link">
         <img src="{{ asset('assets/admin/dist/img/AdminLTELogo.png') }}" alt="App Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Glovana</span>
+        <span class="brand-text font-weight-light">Storati</span>
     </a>
 
     <!-- Sidebar -->
@@ -125,6 +125,16 @@
                                         class="nav-link {{ request()->routeIs('orders.index') ? 'active' : '' }}">
                                         <i class="fas fa-handshake nav-icon"></i>
                                         <p>{{ __('messages.orders') }}</p>
+                                    </a>
+                                </li>
+                 @endcanany
+             
+                 @canany(['celebrity-stories-table', 'celebrity-stories-add', 'celebrity-stories-edit', 'celebrity-stories-delete'])
+                                <li class="nav-item">
+                                    <a href="{{ route('celebrity-stories.index') }}"
+                                        class="nav-link {{ request()->routeIs('celebrity-stories.index') ? 'active' : '' }}">
+                                        <i class="fas fa-handshake nav-icon"></i>
+                                        <p>{{ __('messages.Celebrity Stories') }}</p>
                                     </a>
                                 </li>
                  @endcanany

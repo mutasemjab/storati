@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
@@ -40,16 +40,18 @@ class CategoryController extends Controller
         $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
+            'photo' => 'required',
             'category_id' => 'nullable|exists:categories,id',
         ]);
 
-        DB::table('categories')->insert([
-            'name_en' => $request->name_en,
-            'name_ar' => $request->name_ar,
-            'category_id' => $request->category_id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+         $data = $request->only(['name_en', 'name_ar','category_id']);
+
+            // Upload photo using your custom uploadImage function
+         if ($request->hasFile('photo')) {
+             $data['photo'] = uploadImage('assets/admin/uploads/', $request->file('photo'));
+         }
+
+         Category::create($data);
 
         return redirect()->route('categories.index')->with('success', __('messages.Category_Created'));
     }
@@ -75,21 +77,44 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category', 'parentCategories'));
     }
 
-    public function update(Request $request, $id)
+
+    public function update(Request $request, Category $category)
     {
         $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id|not_in:' . $id,
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'category_id' => 'nullable|exists:categories,id|not_in:' . $category->id,
         ]);
 
-        DB::table('categories')->where('id', $id)->update([
-            'name_en' => $request->name_en,
-            'name_ar' => $request->name_ar,
-            'category_id' => $request->category_id,
-            'updated_at' => now(),
-        ]);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('categories.index')->with('success', __('messages.Category_Updated'));
+            $data = $request->only(['name_en', 'name_ar','category_id']);
+
+            // Handle photo update using your custom uploadImage function
+            if ($request->hasFile('photo')) {
+                // Delete old photo
+                if ($category->photo && File::exists(base_path('assets/admin/uploads/'.$category->photo))) {
+                    File::delete(base_path('assets/admin/uploads/'.$category->photo));
+                }
+                
+                // Upload new photo
+                $data['photo'] = uploadImage('assets/admin/uploads/', $request->file('photo'));
+            }
+
+            $category->update($data);
+
+            DB::commit();
+
+            return redirect()->route('categories.index')
+                           ->with('success', __('messages.Category_Updated_Successfully'));
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                           ->with('error', __('messages.Something_Went_Wrong'))
+                           ->withInput();
+        }
     }
 }
