@@ -19,6 +19,14 @@ class CategoryController extends Controller
          return $this->success_response('Category retrieved successfully', $categories);
      }
    
+     public function getChildrenCategory($id)
+     {
+         
+         $categories = Category::where('category_id',$id)->get();
+         
+         return $this->success_response('Category retrieved successfully', $categories);
+     }
+   
      public function getProductsFromCategory($id)
      {
          

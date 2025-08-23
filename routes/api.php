@@ -47,6 +47,7 @@ Route::group(['prefix' => 'v1/user'], function () {
 
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}', [CategoryController::class, 'getProductsFromCategory']);
+    Route::get('/categories/{id}/getChildrenCategory', [CategoryController::class, 'getChildrenCategory']);
   
     Route::get('/brands', [BrandController::class, 'index']);
     Route::get('/brands/{id}', [BrandController::class, 'getProductsFromBrand']);
