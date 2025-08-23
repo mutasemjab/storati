@@ -14,7 +14,7 @@ class CategoryController extends Controller
      public function index()
      {
          
-         $categories = Category::get();
+         $categories = Category::with('children')->where('category_id',null)->get();
          
          return $this->success_response('Category retrieved successfully', $categories);
      }

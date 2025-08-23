@@ -58,8 +58,9 @@ Route::group(['prefix' => 'v1/user'], function () {
     Route::get('/celebrities/{id}', [CelebrityController::class, 'getProductsFromCelebrity']);
 
     Route::get('/products/{id}', [ProductController::class, 'productDetails']);
-    Route::get('product/search', [ProductController::class, 'searchProduct']);
-
+    Route::get('/product/search', [ProductController::class, 'searchProduct']);
+    Route::post('/products', [ProductController::class, 'getProducts']);
+    
     Route::get('/home', [HomeController::class, 'getHomeData']);
 
     // Auth Route

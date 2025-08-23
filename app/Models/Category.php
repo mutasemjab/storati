@@ -37,4 +37,9 @@ class Category extends Model
 
         return $lang === 'ar' ? $this->name_ar : $this->name_en;
     }
+
+     public function children()
+    {
+        return $this->hasMany(Category::class, 'category_id');
+    }
 }
