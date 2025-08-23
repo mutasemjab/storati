@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-     use Responses;
+    use Responses;
 
     public function getProducts(Request $request)
     {
@@ -58,69 +58,69 @@ class ProductController extends Controller
             }
 
             if (!empty($validated['category_id'])) {
-                $query->where(function($q) use ($validated) {
+                $query->where(function ($q) use ($validated) {
                     // Include products from the category itself
                     $q->where('category_id', $validated['category_id'])
-                      // Include products from subcategories
-                      ->orWhereHas('category', function($subQuery) use ($validated) {
-                          $subQuery->where('category_id', $validated['category_id']);
-                      });
+                        // Include products from subcategories
+                        ->orWhereHas('category', function ($subQuery) use ($validated) {
+                            $subQuery->where('category_id', $validated['category_id']);
+                        });
                 });
             }
 
             // Apply search filter
             if (!empty($validated['search'])) {
                 $searchTerm = $validated['search'];
-                $query->where(function($q) use ($searchTerm) {
+                $query->where(function ($q) use ($searchTerm) {
                     $q->where('name_en', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('description_en', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('description_ar', 'LIKE', "%{$searchTerm}%")
-                      // Search in related models
-                      ->orWhereHas('category', function($subQuery) use ($searchTerm) {
-                          $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
-                                   ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
-                      })
-                      ->orWhereHas('brand', function($subQuery) use ($searchTerm) {
-                          $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
-                                   ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
-                      })
-                      ->orWhereHas('celebrity', function($subQuery) use ($searchTerm) {
-                          $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
-                                   ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
-                      })
-                      ->orWhereHas('shop', function($subQuery) use ($searchTerm) {
-                          $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
-                                   ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
-                      });
+                        ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('description_en', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('description_ar', 'LIKE', "%{$searchTerm}%")
+                        // Search in related models
+                        ->orWhereHas('category', function ($subQuery) use ($searchTerm) {
+                            $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
+                                ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
+                        })
+                        ->orWhereHas('brand', function ($subQuery) use ($searchTerm) {
+                            $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
+                                ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
+                        })
+                        ->orWhereHas('celebrity', function ($subQuery) use ($searchTerm) {
+                            $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
+                                ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
+                        })
+                        ->orWhereHas('shop', function ($subQuery) use ($searchTerm) {
+                            $subQuery->where('name_en', 'LIKE', "%{$searchTerm}%")
+                                ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%");
+                        });
                 });
             }
 
             // Apply price filters
             if (isset($validated['min_price'])) {
-                $query->where(function($q) use ($validated) {
+                $query->where(function ($q) use ($validated) {
                     $q->where('price_after_discount', '>=', $validated['min_price'])
-                      ->orWhere(function($subQ) use ($validated) {
-                          $subQ->whereNull('price_after_discount')
-                               ->where('price', '>=', $validated['min_price']);
-                      });
+                        ->orWhere(function ($subQ) use ($validated) {
+                            $subQ->whereNull('price_after_discount')
+                                ->where('price', '>=', $validated['min_price']);
+                        });
                 });
             }
 
             if (isset($validated['max_price'])) {
-                $query->where(function($q) use ($validated) {
+                $query->where(function ($q) use ($validated) {
                     $q->where('price_after_discount', '<=', $validated['max_price'])
-                      ->orWhere(function($subQ) use ($validated) {
-                          $subQ->whereNull('price_after_discount')
-                               ->where('price', '<=', $validated['max_price']);
-                      });
+                        ->orWhere(function ($subQ) use ($validated) {
+                            $subQ->whereNull('price_after_discount')
+                                ->where('price', '<=', $validated['max_price']);
+                        });
                 });
             }
 
             // Filter for discounted products only
             if (!empty($validated['discount_only'])) {
                 $query->whereNotNull('discount_percentage')
-                      ->where('discount_percentage', '>', 0);
+                    ->where('discount_percentage', '>', 0);
             }
 
             // Filter by featured status
@@ -177,14 +177,12 @@ class ProductController extends Controller
                 ],
                 'filters_applied' => array_filter($validated) // Show which filters were applied
             ], 200);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -194,7 +192,7 @@ class ProductController extends Controller
         }
     }
 
-       public function searchProduct(Request $request)
+    public function searchProduct(Request $request)
     {
         try {
             $query = Product::query();
@@ -205,11 +203,11 @@ class ProductController extends Controller
             // Search by product name, description, or specification
             if ($request->has('search') && !empty($request->search)) {
                 $searchTerm = $request->search;
-                $query->where(function($q) use ($searchTerm) {
+                $query->where(function ($q) use ($searchTerm) {
                     $q->where('name_en', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('description_en', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('description_ar', 'LIKE', "%{$searchTerm}%");
+                        ->orWhere('name_ar', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('description_en', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('description_ar', 'LIKE', "%{$searchTerm}%");
                 });
             }
 
@@ -220,7 +218,7 @@ class ProductController extends Controller
             // Sort by price
             if ($request->has('sort_by') && $request->sort_by === 'price') {
                 $sortOrder = $request->get('sort_order', 'asc'); // asc = low to high, desc = high to low
-                
+
                 if ($sortOrder === 'desc') {
                     $query->orderBy('price', 'desc'); // High to low
                 } else {
@@ -228,31 +226,48 @@ class ProductController extends Controller
                 }
             }
 
-            $products = $query->with('images','variations')->get();
+            $products = $query->with('images', 'variations')->get();
 
             // Debug: Log results count
             \Log::info('Products found: ' . $products->count());
 
             // If no search term, return all products
             if (!$request->has('search') || empty($request->search)) {
-                $allProducts = Product::with('images','variations')->get();
+                $allProducts = Product::with('images', 'variations')->get();
                 return $this->success_response('All products retrieved successfully', $allProducts);
             }
 
             return $this->success_response('Products retrieved successfully', $products);
-
         } catch (\Exception $e) {
             \Log::error('Search error: ' . $e->getMessage());
             return $this->error_response('Error retrieving products', ['error' => $e->getMessage()]);
         }
     }
 
-     public function productDetails($id)
-     {
-         
-         $products = Product::with('images','ratings','variations')->where('id',$id)->get();
-         
-         return $this->success_response('Product retrieved successfully', $products);
-     }
-   
+        public function productDetails($id)
+    {
+        // Get the main product
+        $product = Product::with('images', 'ratings', 'variations', 'variations.color', 'variations.size')
+            ->where('id', $id)
+            ->first();
+        
+        if (!$product) {
+            return $this->error_response('Product not found', [], 404);
+        }
+        
+        // Get similar products from the same category (excluding the current product)
+        $similarProducts = Product::with('images', 'ratings', 'variations', 'variations.color', 'variations.size')
+            ->where('category_id', $product->category_id) // assuming you have a category_id field
+            ->where('id', '!=', $id) // exclude the current product
+            ->limit(10) // limit the number of similar products
+            ->get();
+        
+        // Combine the data
+        $response = [
+            'product' => $product,
+            'similar_products' => $similarProducts
+        ];
+        
+        return $this->success_response('Product retrieved successfully', $response);
+    }
 }
