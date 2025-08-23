@@ -183,7 +183,7 @@ class HomeController extends Controller
                     'name' => $locale === 'ar' ? $celebrity->name_ar : $celebrity->name_en,
                     'name_en' => $celebrity->name_en,
                     'name_ar' => $celebrity->name_ar,
-                    'photo' => asset('storage/' . $celebrity->photo),
+                    'photo' => $celebrity->photo,
                     'stories_count' => count($stories),
                 ],
                 'stories' => $stories
@@ -277,7 +277,7 @@ class HomeController extends Controller
                     'name' => $locale === 'ar' ? $story->celebrity->name_ar : $story->celebrity->name_en,
                     'name_en' => $story->celebrity->name_en,
                     'name_ar' => $story->celebrity->name_ar,
-                    'photo' => asset('storage/' . $story->celebrity->photo),
+                    'photo' => $story->celebrity->photo,
                 ]
             ];
 
@@ -335,7 +335,7 @@ class HomeController extends Controller
                     'name' => $locale === 'ar' ? $story->celebrity->name_ar : $story->celebrity->name_en,
                     'name_en' => $story->celebrity->name_en,
                     'name_ar' => $story->celebrity->name_ar,
-                    'photo' => asset('storage/' . $story->celebrity->photo),
+                    'photo' => $story->celebrity->photo,
                 ]
             ];
 
@@ -434,7 +434,7 @@ class HomeController extends Controller
                         'name' => $locale === 'ar' ? $celebrity->name_ar : $celebrity->name_en,
                         'name_en' => $celebrity->name_en,
                         'name_ar' => $celebrity->name_ar,
-                        'photo' => asset('storage/' . $celebrity->photo),
+                        'photo' => $celebrity->photo,
                         'stories_count' => count($stories),
                         'has_unseen_stories' => $hasUnseenStories, // RED ring if true, GRAY if false
                         'user_authenticated' => !is_null($userId), // For debugging purposes
@@ -479,7 +479,7 @@ class HomeController extends Controller
                 'celebrity' => $product->celebrity ? [
                     'id' => $product->celebrity->id,
                     'name' => $locale === 'ar' ? $product->celebrity->name_ar : $product->celebrity->name_en,
-                    'photo' => asset('storage/' . $product->celebrity->photo),
+                    'photo' => $product->celebrity->photo,
                 ] : null,
                 'brand' => $product->brand ? [
                     'id' => $product->brand->id,
@@ -488,7 +488,7 @@ class HomeController extends Controller
                 'shop' => $product->shop ? [
                     'id' => $product->shop->id,
                     'name' => $locale === 'ar' ? $product->shop->name_ar : $product->shop->name_en,
-                    'photo' => asset('assets/admin/uploads/' . $product->shop->photo),
+                    'photo' => $product->shop->photo,
                 ] : null,
                 'category' => $product->category ? [
                     'id' => $product->category->id,
@@ -530,7 +530,7 @@ class HomeController extends Controller
                 'celebrity' => $product->celebrity ? [
                     'id' => $product->celebrity->id,
                     'name' => $locale === 'ar' ? $product->celebrity->name_ar : $product->celebrity->name_en,
-                    'photo' => asset('storage/' . $product->celebrity->photo),
+                    'photo' => $product->celebrity->photo,
                 ] : null,
                 'brand' => $product->brand ? [
                     'id' => $product->brand->id,
@@ -539,7 +539,7 @@ class HomeController extends Controller
                 'shop' => $product->shop ? [
                     'id' => $product->shop->id,
                     'name' => $locale === 'ar' ? $product->shop->name_ar : $product->shop->name_en,
-                    'photo' => asset('assets/admin/uploads/' . $product->shop->photo),
+                    'photo' => $product->shop->photo,
                 ] : null,
                 'category' => $product->category ? [
                     'id' => $product->category->id,
@@ -564,7 +564,7 @@ class HomeController extends Controller
         foreach ($banners as $banner) {
             $bannersData[] = [
                 'id' => $banner->id,
-                'photo' => asset('storage/' . $banner->photo),
+                'photo' => $banner->photo,
                 'product' => $banner->product ? [
                     'id' => $banner->product->id,
                     'name_en' => $banner->product->name_en,
@@ -594,7 +594,7 @@ class HomeController extends Controller
                 'name' => $locale === 'ar' ? $shop->name_ar : $shop->name_en,
                 'name_en' => $shop->name_en,
                 'name_ar' => $shop->name_ar,
-                'photo' => asset('assets/admin/uploads/' . $shop->photo),
+                'photo' => $shop->photo,
                 'products_count' => $shop->products()->count(),
                 'created_at' => $shop->created_at->toISOString(),
             ];

@@ -29,8 +29,5 @@ class Banner extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function providerType()
-    {
-        return $this->belongsTo(ProviderType::class);
-    }
+  
 }

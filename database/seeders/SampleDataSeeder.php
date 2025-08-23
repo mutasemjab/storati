@@ -18,10 +18,7 @@ class SampleDataSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        // Create upload directories if they don't exist
-        $this->createUploadDirectories();
-        
+    {        
         // Create sample celebrity
         $this->createSampleCelebrity();
         
@@ -34,25 +31,6 @@ class SampleDataSeeder extends Seeder
         $this->command->info('Sample data created successfully!');
     }
 
-    /**
-     * Create upload directories
-     */
-    private function createUploadDirectories()
-    {
-        $directories = [
-            'assets/admin/uploads/',
-            'assets/admin/uploads/',
-            'assets/admin/uploads/'
-        ];
-
-        foreach ($directories as $directory) {
-            $fullPath = base_path($directory);
-            if (!File::exists($fullPath)) {
-                File::makeDirectory($fullPath, 0755, true);
-                $this->command->info("Created directory: {$directory}");
-            }
-        }
-    }
 
     /**
      * Create sample celebrity
@@ -63,7 +41,7 @@ class SampleDataSeeder extends Seeder
             ['name_en' => 'Will Smith'],
             [
                 'name_ar' => 'ويل سميث',
-                'photo' => 'assets/admin/uploads/sample_celebrity.jpg'
+                'photo' => 'sample_celebrity.jpg'
             ]
         );
 
@@ -79,7 +57,7 @@ class SampleDataSeeder extends Seeder
             ['name_en' => 'Nike'],
             [
                 'name_ar' => 'نايك',
-                'photo' => 'assets/admin/uploads/sample_brand.jpg'
+                'photo' => 'sample_brand.jpg'
             ]
         );
 
@@ -95,7 +73,7 @@ class SampleDataSeeder extends Seeder
             ['name_en' => 'Fashion Store'],
             [
                 'name_ar' => 'متجر الأزياء',
-                'photo' => 'assets/admin/uploads/sample_shop.jpg'
+                'photo' => 'sample_shop.jpg'
             ]
         );
 

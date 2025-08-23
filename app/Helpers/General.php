@@ -2,9 +2,10 @@
 
 function uploadImage($folder, $image)
 {
-  $extension = strtolower($image->extension());
- // $filename = time() . rand(100, 999) . '.' . $extension;
-  $filename= $image->getClientOriginalName() ;
+  $extension = strtolower($image->getClientOriginalExtension());
+
+  // Generate unique filename
+  $filename = uniqid() . '_' . time() . '.' . $extension;
   $image->move($folder, $filename);
   return $filename;
 }
@@ -12,9 +13,6 @@ function uploadImage($folder, $image)
 
 function uploadFile($file, $folder)
 {
-    $path = $file->store($folder);
-    return $path;
+  $path = $file->store($folder);
+  return $path;
 }
-
-
-
