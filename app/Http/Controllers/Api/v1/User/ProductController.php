@@ -40,7 +40,8 @@ class ProductController extends Controller
                 'category',
                 'celebrity',
                 'brand',
-                'shop'
+                'shop',
+                'variations'
             ]);
 
             // Apply main filters (shop_id, brand_id, celebrity_id, category_id)
@@ -227,14 +228,14 @@ class ProductController extends Controller
                 }
             }
 
-            $products = $query->with('images','ratings')->get();
+            $products = $query->with('images','variations')->get();
 
             // Debug: Log results count
             \Log::info('Products found: ' . $products->count());
 
             // If no search term, return all products
             if (!$request->has('search') || empty($request->search)) {
-                $allProducts = Product::with('images','ratings')->get();
+                $allProducts = Product::with('images','variations')->get();
                 return $this->success_response('All products retrieved successfully', $allProducts);
             }
 
@@ -249,7 +250,7 @@ class ProductController extends Controller
      public function productDetails($id)
      {
          
-         $products = Product::with('images','ratings')->where('id',$id)->get();
+         $products = Product::with('images','ratings','variations')->where('id',$id)->get();
          
          return $this->success_response('Product retrieved successfully', $products);
      }
