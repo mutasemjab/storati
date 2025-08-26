@@ -30,4 +30,10 @@ class Variation extends Model
         return $this->belongsTo(Size::class);
     }
 
+     public function getFinalPriceAttribute()
+    {
+        $basePrice = $this->product->price_after_discount ?? $this->product->price;
+        return $basePrice + $this->price_adjustment;
+    }
+
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('tax')->default(16);
             $table->double('discount_percentage')->nullable();
             $table->double('price_after_discount')->nullable();
+            $table->enum('gender', ['man', 'woman', 'both'])->default('both');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('celebrity_id')->nullable();

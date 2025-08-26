@@ -54,6 +54,21 @@
                                                     @enderror
                                                 </div>
                                             </div>
+                                            <!-- Add this after the name_ar field -->
+                                                <div class="col-md-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">{{ __('messages.Gender') }} <span class="text-danger">*</span></label>
+                                                        <select class="form-control @error('gender') is-invalid @enderror" name="gender" required>
+                                                            <option value="">{{ __('messages.Select_Gender') }}</option>
+                                                            <option value="man" {{ old('gender') == 'man' ? 'selected' : '' }}>{{ __('messages.Man') }}</option>
+                                                            <option value="woman" {{ old('gender') == 'woman' ? 'selected' : '' }}>{{ __('messages.Woman') }}</option>
+                                                            <option value="both" {{ old('gender', 'both') == 'both' ? 'selected' : '' }}>{{ __('messages.Both') }}</option>
+                                                        </select>
+                                                        @error('gender')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>

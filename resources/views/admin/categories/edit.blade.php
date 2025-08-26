@@ -49,6 +49,14 @@
                             @enderror
                         </div>
 
+                        <!-- In the gender select field for edit form -->
+                        <select class="form-control @error('gender') is-invalid @enderror" name="gender" required>
+                            <option value="">{{ __('messages.Select_Gender') }}</option>
+                            <option value="man" {{ old('gender', $category->gender) == 'man' ? 'selected' : '' }}>{{ __('messages.Man') }}</option>
+                            <option value="woman" {{ old('gender', $category->gender) == 'woman' ? 'selected' : '' }}>{{ __('messages.Woman') }}</option>
+                            <option value="both" {{ old('gender', $category->gender) == 'both' ? 'selected' : '' }}>{{ __('messages.Both') }}</option>
+                        </select>
+
                         <div class="mb-3">
                             <label for="category_id" class="form-label">
                                 {{ __('messages.Parent_Category') }}

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
@@ -23,6 +24,26 @@ class Product extends Model
         'price_after_discount' => 'decimal:2',
     ];
 
+         protected static function booted()
+    {
+        // Check if this model's table has a gender column
+        static::addGlobalScope('gender', function ($builder) {
+            if (!Schema::hasColumn((new static)->getTable(), 'gender')) {
+                return;
+            }
+
+            $gender = request()->header('Gender');
+            
+            if (!$gender || !in_array($gender, ['man', 'woman'])) {
+                return;
+            }
+
+            $builder->where(function($query) use ($gender) {
+                $query->where('gender', $gender)
+                      ->orWhere('gender', 'both');
+            });
+        });
+    }
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -84,6 +105,15 @@ class Product extends Model
         return $this->hasMany(ProductRating::class);
     }
 
+    public function colors()
+    {
+        return $this->variations()->with('color')->get()->pluck('color')->unique('id');
+    }
+
+    public function sizes()
+    {
+        return $this->variations()->with('size')->get()->pluck('size')->unique('id');
+    }
 
     public function getIsFavouriteAttribute()
     {

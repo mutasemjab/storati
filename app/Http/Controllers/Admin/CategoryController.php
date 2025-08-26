@@ -41,10 +41,11 @@ class CategoryController extends Controller
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
             'photo' => 'required',
+            'gender' => 'required|in:man,woman,both',
             'category_id' => 'nullable|exists:categories,id',
         ]);
 
-         $data = $request->only(['name_en', 'name_ar','category_id']);
+         $data = $request->only(['name_en', 'name_ar','category_id','gender']);
 
             // Upload photo using your custom uploadImage function
          if ($request->hasFile('photo')) {
@@ -84,13 +85,14 @@ class CategoryController extends Controller
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'gender' => 'required|in:man,woman,both',
             'category_id' => 'nullable|exists:categories,id|not_in:' . $category->id,
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = $request->only(['name_en', 'name_ar','category_id']);
+            $data = $request->only(['name_en', 'name_ar','category_id','gender']);
 
             // Handle photo update using your custom uploadImage function
             if ($request->hasFile('photo')) {

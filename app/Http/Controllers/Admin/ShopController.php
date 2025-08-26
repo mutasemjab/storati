@@ -28,13 +28,14 @@ class ShopController extends Controller
         $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
+            'gender' => 'required|in:man,woman,both',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = $request->only(['name_en', 'name_ar']);
+            $data = $request->only(['name_en', 'name_ar','gender']);
 
             // Upload photo using your custom uploadImage function
             if ($request->hasFile('photo')) {
@@ -72,13 +73,14 @@ class ShopController extends Controller
         $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
+            'gender' => 'required|in:man,woman,both',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = $request->only(['name_en', 'name_ar']);
+            $data = $request->only(['name_en', 'name_ar','gender']);
 
             // Handle photo update using your custom uploadImage function
             if ($request->hasFile('photo')) {

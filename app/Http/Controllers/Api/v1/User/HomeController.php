@@ -453,7 +453,7 @@ class HomeController extends Controller
      */
     private function getMyCollabsProductsData($locale)
     {
-        $products = Product::with(['celebrity', 'brand', 'shop', 'category'])
+        $products = Product::with(['celebrity', 'brand', 'shop', 'category', 'images']) // Added 'images'
             ->where('my_collabs', 1)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -476,6 +476,13 @@ class HomeController extends Controller
                 'final_price' => $product->price_after_discount ?: $product->price,
                 'is_discounted' => !is_null($product->discount_percentage) && $product->discount_percentage > 0,
                 'is_featured' => $product->is_featured == 1,
+                'images' => $product->images->map(function($image) {
+                    return [
+                        'id' => $image->id,
+                        'photo' => $image->photo,
+                    ];
+                }),
+                'main_image' => $product->images->first() ? $product->images->first()->photo : null, // First image as main
                 'celebrity' => $product->celebrity ? [
                     'id' => $product->celebrity->id,
                     'name' => $locale === 'ar' ? $product->celebrity->name_ar : $product->celebrity->name_en,
@@ -500,11 +507,10 @@ class HomeController extends Controller
 
         return $productsData;
     }
- 
- 
+
     private function getFeaturedProductsData($locale)
     {
-        $products = Product::with(['celebrity', 'brand', 'shop', 'category'])
+        $products = Product::with(['celebrity', 'brand', 'shop', 'category', 'images']) // Added 'images'
             ->where('is_featured', 1)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -527,6 +533,13 @@ class HomeController extends Controller
                 'final_price' => $product->price_after_discount ?: $product->price,
                 'is_discounted' => !is_null($product->discount_percentage) && $product->discount_percentage > 0,
                 'is_featured' => $product->is_featured == 1,
+                'images' => $product->images->map(function($image) {
+                    return [
+                        'id' => $image->id,
+                        'photo' => $image->photo,
+                    ];
+                }),
+                'main_image' => $product->images->first() ? $product->images->first()->photo : null, // First image as main
                 'celebrity' => $product->celebrity ? [
                     'id' => $product->celebrity->id,
                     'name' => $locale === 'ar' ? $product->celebrity->name_ar : $product->celebrity->name_en,

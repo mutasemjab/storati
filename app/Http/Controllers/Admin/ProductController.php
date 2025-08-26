@@ -55,6 +55,7 @@ class ProductController extends Controller
             'brand_id' => 'nullable|exists:brands,id',
             'shop_id' => 'nullable|exists:shops,id',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
+            'gender' => 'required|in:man,woman,both',
             'variations.*.color_id' => 'required_with:variations|exists:colors,id',
             'variations.*.size_id' => 'required_with:variations|exists:sizes,id',
             'variations.*.price_adjustment' => 'nullable|numeric',
@@ -67,7 +68,7 @@ class ProductController extends Controller
             $data = $request->only([
                 'name_en', 'name_ar', 'description_en', 'description_ar', 
                 'price', 'tax', 'discount_percentage', 'category_id', 
-                'celebrity_id', 'brand_id', 'shop_id'
+                'celebrity_id', 'brand_id', 'shop_id','gender'
             ]);
 
             // Calculate price after discount
@@ -149,6 +150,7 @@ class ProductController extends Controller
             'brand_id' => 'nullable|exists:brands,id',
             'shop_id' => 'nullable|exists:shops,id',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
+            'gender' => 'required|in:man,woman,both',
             'variations.*.color_id' => 'required_with:variations|exists:colors,id',
             'variations.*.size_id' => 'required_with:variations|exists:sizes,id',
             'variations.*.price_adjustment' => 'nullable|numeric',
@@ -161,7 +163,7 @@ class ProductController extends Controller
             $data = $request->only([
                 'name_en', 'name_ar', 'description_en', 'description_ar', 
                 'price', 'tax', 'discount_percentage', 'category_id', 
-                'celebrity_id', 'brand_id', 'shop_id'
+                'celebrity_id', 'brand_id', 'shop_id','gender'
             ]);
 
             // Calculate price after discount

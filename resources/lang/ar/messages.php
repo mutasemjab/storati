@@ -2,9 +2,9 @@
 
 return [
 
-    "Home"=>"الصفحة الرئيسية",
-    "Logout"=>"تسجيل الخروج",
-     'ID' => 'الرقم التعريفي',
+    "Home" => "الصفحة الرئيسية",
+    "Logout" => "تسجيل الخروج",
+    'ID' => 'الرقم التعريفي',
     'Name' => 'الاسم',
     'Phone' => 'رقم الهاتف',
     'Email' => 'البريد الإلكتروني',
@@ -44,13 +44,13 @@ return [
     'Leave_blank_to_keep_current_password' => 'اتركه فارغاً للاحتفاظ بكلمة المرور الحالية',
 
     'coupons' => 'كوبونات الخصم',
-    
+
     // Communication
     'notifications' => 'الإشعارات',
-    
+
     // Content Management
     'pages' => 'الصفحات',
-    
+
     // System Settings
     'system_settings' => 'إعدادات النظام',
     'general_settings' => 'الإعدادات العامة',
@@ -58,14 +58,14 @@ return [
     'roles' => 'الأدوار',
     'employees' => 'الموظفين',
     'admin_account' => 'حسابي',
-    
+
     // Reports
     'reports' => 'التقارير',
     'inventory_report_with_costs' => 'تقرير المخزون مع التكاليف',
     'order_report' => 'تقرير الطلبات',
     'product_move' => 'حركة المنتجات',
     'tax_report' => 'تقرير الضرائب',
-    
+
     // Actions
     'create' => 'إنشاء',
     'edit' => 'تعديل',
@@ -89,7 +89,7 @@ return [
     'Cash' => 'نقداً',
     'Visa' => 'فيزا',
     'Wallet' => 'المحفظة',
-   
+
     'Coupons' => 'القسائم',
     'Coupon' => 'قسيمة',
     'Coupons_List' => 'قائمة القسائم',
@@ -116,7 +116,7 @@ return [
     'End_Date' => 'تاريخ الانتهاء',
     'End_Date_Error' => 'يجب أن يكون تاريخ الانتهاء أكبر من أو يساوي تاريخ البداية',
     'Usage_Examples' => 'أمثلة على الاستخدام',
-   
+
     'Wallet_Transactions' => 'معاملات المحفظة',
     'Wallet_Transactions_List' => 'قائمة معاملات المحفظة',
     'Transaction_Details' => 'تفاصيل المعاملة',
@@ -136,14 +136,14 @@ return [
     'Total_Withdrawals' => 'إجمالي السحوبات',
     'Total_Transactions' => 'إجمالي المعاملات',
     'User_Transactions' => 'معاملات المستخدمين',
-   
+
     'user_image' => 'صورة المستخدم',
     'dashboard' => 'لوحة التحكم',
     'logout' => 'تسجيل الخروج',
     'user_management' => 'إدارة المستخدمين',
     'users' => 'المستخدمون',
     'drivers' => 'السائقون',
-   
+
     'ID' => 'الرقم',
     'Name_English' => 'الاسم (إنجليزي)',
     'Name_Arabic' => 'الاسم (عربي)',
@@ -199,7 +199,7 @@ return [
     'Created_At' => 'تاريخ الإنشاء',
     'Currency' => 'دينار', // Jordanian Dinar
     'No_Deliveries_Found' => 'لا يوجد توصيل',
-     
+
     'Categories' => 'الفئات',
     'Add_Category' => 'إضافة فئة',
     'Edit_Category' => 'تعديل الفئة',
@@ -211,7 +211,7 @@ return [
     'Select_Parent_Category' => 'اختر الفئة الأصلية (اختياري)',
     'Leave_Empty_Main_Category' => 'اتركه فارغاً لإنشاء فئة رئيسية',
     'No_Categories_Found' => 'لا توجد فئات',
-        'Products' => 'المنتجات',
+    'Products' => 'المنتجات',
     'Product' => 'منتج',
     'Add_Product' => 'إضافة منتج',
     'Edit_Product' => 'تعديل المنتج',
@@ -222,7 +222,7 @@ return [
     'Product_Updated_Successfully' => 'تم تحديث المنتج بنجاح',
     'Product_Deleted_Successfully' => 'تم حذف المنتج بنجاح',
     'No_Products_Found' => 'لم يتم العثور على منتجات',
-    
+
     // Form Fields
     'Name' => 'الاسم',
     'Name_English' => 'الاسم (إنجليزي)',
@@ -239,7 +239,7 @@ return [
     'No_Discount' => 'لا يوجد خصم',
     'Basic_Information' => 'المعلومات الأساسية',
     'Relations' => 'العلاقات',
-    
+
     // Categories, Brands, etc.
     'Category' => 'الفئة',
     'Categories' => 'الفئات',
@@ -257,7 +257,7 @@ return [
     'Shops' => 'المتاجر',
     'Select_Shop' => 'اختر المتجر',
     'No_Shop' => 'لا يوجد متجر',
-    
+
     // Images
     'Image' => 'الصورة',
     'Images' => 'الصور',
@@ -266,7 +266,7 @@ return [
     'Add_New_Images' => 'إضافة صور جديدة',
     'You_Can_Select_Multiple_Images' => 'يمكنك اختيار صور متعددة',
     'No_Images_Available' => 'لا توجد صور متاحة',
-    
+
     // Variations
     'Product_Variations' => 'تنويعات المنتج',
     'Add_Variation' => 'إضافة تنويع',
@@ -281,7 +281,7 @@ return [
     'Status' => 'الحالة',
     'Active' => 'نشط',
     'Inactive' => 'غير نشط',
-    
+
     // Actions
     'Actions' => 'الإجراءات',
     'View' => 'عرض',
@@ -293,11 +293,11 @@ return [
     'Back' => 'رجوع',
     'Confirm_Delete' => 'تأكيد الحذف',
     'Are_You_Sure_Delete_Product' => 'هل أنت متأكد من حذف هذا المنتج؟',
-    
+
     // Dates
     'Created_At' => 'تاريخ الإنشاء',
     'Updated_At' => 'تاريخ التحديث',
-    
+
     // Messages
     'Something_Went_Wrong' => 'حدث خطأ ما، يرجى المحاولة مرة أخرى',
     // Orders - الطلبات
@@ -326,7 +326,7 @@ return [
     'items_count' => 'عدد العناصر',
     'total_items' => 'إجمالي العناصر',
     'current_order_status' => 'حالة الطلب الحالية',
-   
+
     // Product Information - معلومات المنتج
     'product' => 'المنتج',
     'unit_price' => 'سعر الوحدة',
@@ -335,7 +335,7 @@ return [
     'discount' => 'الخصم',
     'total_price' => 'السعر الإجمالي',
     'no_discount' => 'لا يوجد خصم',
-     'Celebrities' => 'المشاهير',
+    'Celebrities' => 'المشاهير',
     'Celebrity' => 'مشهور',
     'Add_Celebrity' => 'إضافة مشهور',
     'Edit_Celebrity' => 'تعديل المشهور',
@@ -349,7 +349,7 @@ return [
     'Celebrity_Updated_Successfully' => 'تم تحديث المشهور بنجاح',
     'Celebrity_Deleted_Successfully' => 'تم حذف المشهور بنجاح',
     'No_Celebrities_Found' => 'لم يتم العثور على مشاهير',
-        'Shops' => 'المتاجر',
+    'Shops' => 'المتاجر',
     'Shop' => 'متجر',
     'Add_Shop' => 'إضافة متجر',
     'Edit_Shop' => 'تعديل المتجر',
@@ -384,15 +384,15 @@ return [
     'Cannot_Delete_Brand_Has_Products' => 'لا يمكن حذف العلامة التجارية. تحتوي على منتجات مرتبطة.',
     'Are_You_Sure_Delete_Brand' => 'هل أنت متأكد من حذف هذه العلامة التجارية؟',
 
-    "Catalog_Management"=>"إدارة الخدمات",
+    "Catalog_Management" => "إدارة الخدمات",
 
-     'note_vouchers' => 'سندات القيد',
+    'note_vouchers' => 'سندات القيد',
     'note_voucher' => 'سند قيد',
     'create_note_voucher' => 'إنشاء سند قيد',
     'edit_note_voucher' => 'تعديل سند قيد',
     'view_note_voucher' => 'عرض سند قيد',
     'voucher_information' => 'معلومات السند',
-    
+
     // Common Fields
     'number' => 'الرقم',
     'type' => 'النوع',
@@ -404,17 +404,17 @@ return [
     'product' => 'المنتج',
     'quantity' => 'الكمية',
     'actions' => 'الإجراءات',
-    
+
     // Types
     'in' => 'داخل',
     'out' => 'خارج',
     'select_type' => 'اختر النوع',
-    
+
     // Selects
     'select_warehouse' => 'اختر المستودع',
     'select_order' => 'اختر الطلب',
     'select_product' => 'اختر المنتج',
-      'coupons_and_users' => 'الكوبونات والمستخدمين',
+    'coupons_and_users' => 'الكوبونات والمستخدمين',
     'id' => 'الرقم التعريفي',
     'code' => 'الكود',
     'amount' => 'المبلغ',
@@ -430,7 +430,7 @@ return [
     'no_users_yet' => 'لا يوجد مستخدمين بعد',
     'no_coupons_found' => 'لم يتم العثور على كوبونات',
     'no_coupons_in_system' => 'لا توجد كوبونات في النظام حتى الآن.',
-       "Add_New_Note_Voucher" => "إضافة سند قيد جديد",
+    "Add_New_Note_Voucher" => "إضافة سند قيد جديد",
     "Back" => "رجوع",
     "Number" => "الرقم",
     "Type" => "النوع",
@@ -455,13 +455,13 @@ return [
     "Remove" => "إزالة",
     "Please_Add_At_Least_One_Product" => "الرجاء إضافة منتج واحد على الأقل",
 
-     'Video' => 'فيديو',
+    'Video' => 'فيديو',
     'Caption' => 'التسمية التوضيحية',
     'Optional' => 'اختياري',
     'Cancel' => 'إلغاء',
     'characters' => 'حرف',
     'Celebrity' => 'المشاهير',
-    
+
     // Stories
     'Celebrity Stories' => 'قصص المشاهير',
     'Add New Story' => 'إضافة قصة جديدة',
@@ -476,24 +476,28 @@ return [
     'Write a caption for your story...' => 'اكتب تسمية توضيحية لقصتك...',
     'Add Story' => 'إضافة قصة',
     'Uploading...' => 'جاري الرفع...',
-    
+
     // File upload
     'Max 20MB, JPG, PNG, GIF' => 'حد أقصى 20 ميجابايت، JPG، PNG، GIF',
     'Max 20MB, MP4, MOV, AVI' => 'حد أقصى 20 ميجابايت، MP4، MOV، AVI',
     'Your browser does not support the video tag' => 'متصفحك لا يدعم علامة الفيديو',
-    
+
     // Messages
     'Story added successfully' => 'تمت إضافة القصة بنجاح',
     'Story deleted successfully' => 'تم حذف القصة بنجاح',
     'Story activated successfully' => 'تم تفعيل القصة بنجاح',
     'Story deactivated successfully' => 'تم إلغاء تفعيل القصة بنجاح',
+    'Gender' => 'الجنس',
+    'Select_Gender' => 'اختر الجنس',
+    'Man' => 'ذكر',
+    'Woman' => 'أنثى',
+    'Both' => 'الجهتين',
 
-    ""=>"",
-    ""=>"",
-    ""=>"",
-    ""=>"",
-    ""=>"",
+    "" => "",
+    "" => "",
+    "" => "",
+    "" => "",
+    "" => "",
 
 
 ];
-

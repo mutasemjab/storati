@@ -9,4 +9,9 @@ class Color extends Model
 {
     use HasFactory;
      protected $guarded = [];
+
+    public function variations()
+    {
+        return $this->hasMany(Variation::class);
+    }
 }

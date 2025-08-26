@@ -20,13 +20,21 @@ class OrderController extends Controller
 {
     use Responses;
 
-      public function index(Request $request)
+     public function index(Request $request)
     {
-        $orders = Order::with('orderProducts','orderProducts.product','orderProducts.product.images')->where('user_id', $request->user()->id)->get();
+        $orders = Order::with([
+            'orderProducts',
+            'orderProducts.product',
+            'orderProducts.product.images',
+            'orderProducts.variation',
+            'orderProducts.variation.color',
+            'orderProducts.variation.size'
+        ])->where('user_id', $request->user()->id)->get();
+
         return $this->success_response('Orders retrieved successfully', $orders);
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'address_id' => 'required|exists:user_addresses,id',
@@ -38,12 +46,18 @@ class OrderController extends Controller
 
         try {
             $user = $request->user();
-            $cartItems = Cart::where('user_id', $user->id)->where('status', 1)->get();
+            
+            // Get cart items with product and variation relationships
+            $cartItems = Cart::with(['product', 'variation', 'variation.color', 'variation.size'])
+                            ->where('user_id', $user->id)
+                            ->where('status', 1)
+                            ->get();
 
             if ($cartItems->isEmpty()) {
                 return $this->error_response('Cart is empty', []);
             }
 
+            // Get delivery address and fee
             $deliveryAddress = \App\Models\UserAddress::find($request->address_id);
             $deliveryFee = $deliveryAddress->delivery->price ?? 0;
 
@@ -52,19 +66,36 @@ class OrderController extends Controller
             $totalDiscount = 0;
             $orderProducts = [];
 
+            // Process each cart item
             foreach ($cartItems as $item) {
-                $product = Product::find($item->product_id);
+                $product = $item->product;
+                $variation = $item->variation;
 
+                // Calculate base price (product price + variation adjustment if any)
                 $basePrice = $product->price_after_discount ?? $product->price;
-                $discountValue = $product->price - $basePrice;
+                if ($variation) {
+                    $basePrice += $variation->price_adjustment;
+                }
+
+                // Calculate discount value per unit
+                $originalPrice = $product->price;
+                if ($variation) {
+                    $originalPrice += $variation->price_adjustment;
+                }
+                $discountValue = $originalPrice - $basePrice;
+
+                // Calculate subtotal before tax
                 $productSubtotal = $basePrice * $item->quantity;
 
+                // Calculate tax
                 $taxRate = $product->tax ?? 10; // default 10%
                 $taxValue = $productSubtotal * ($taxRate / 100);
 
+                // Prepare order product data
                 $orderProducts[] = [
-                    'order_id' => null,
+                    'order_id' => null, // Will be set after order creation
                     'product_id' => $item->product_id,
+                    'variation_id' => $item->variation_id,
                     'quantity' => $item->quantity,
                     'unit_price' => $basePrice,
                     'total_price_before_tax' => $productSubtotal,
@@ -77,42 +108,68 @@ class OrderController extends Controller
                     'updated_at' => now()
                 ];
 
+                // Add to totals
                 $totalBeforeTax += $productSubtotal;
                 $totalTax += $taxValue;
                 $totalDiscount += $discountValue * $item->quantity;
             }
 
+            // Handle coupon discount
             $couponDiscount = 0;
             $couponId = null;
 
             if ($request->coupon_code) {
                 $coupon = Coupon::where('code', $request->coupon_code)
                     ->whereDate('expired_at', '>=', today())
+                    ->where('status', 1) // Assuming active status
                     ->first();
 
                 if ($coupon) {
+                    // Check if user already used this coupon
                     $alreadyUsed = DB::table('user_coupons')
                         ->where('user_id', $user->id)
                         ->where('coupon_id', $coupon->id)
                         ->exists();
 
+                    // Apply coupon if not used and minimum total is met
                     if (!$alreadyUsed && $totalBeforeTax >= $coupon->minimum_total) {
-                        $couponDiscount = $coupon->amount;
+                        if ($coupon->type === 'percentage') {
+                            $couponDiscount = ($totalBeforeTax * $coupon->amount) / 100;
+                            // Apply max discount limit if exists
+                            if ($coupon->max_discount && $couponDiscount > $coupon->max_discount) {
+                                $couponDiscount = $coupon->max_discount;
+                            }
+                        } else {
+                            // Fixed amount coupon
+                            $couponDiscount = $coupon->amount;
+                        }
+
                         $couponId = $coupon->id;
 
-                        // Store user-coupon usage
+                        // Record coupon usage
                         DB::table('user_coupons')->insert([
                             'user_id' => $user->id,
                             'coupon_id' => $coupon->id,
+                            'used_at' => now(),
+                            'order_total' => $totalBeforeTax,
+                            'discount_amount' => $couponDiscount,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
+                    } else {
+                        // Coupon validation failed
+                        $errorMessage = $alreadyUsed ? 'Coupon already used' : 'Order total does not meet minimum requirement';
+                        return $this->error_response($errorMessage, []);
                     }
+                } else {
+                    return $this->error_response('Invalid or expired coupon code', []);
                 }
             }
 
+            // Calculate final total
             $totalFinal = $totalBeforeTax + $totalTax + $deliveryFee - $couponDiscount;
 
+            // Create the order
             $order = Order::create([
                 'user_id' => $user->id,
                 'address_id' => $request->address_id,
@@ -122,28 +179,63 @@ class OrderController extends Controller
                 'total_discounts' => $totalDiscount,
                 'coupon_discount' => $couponDiscount,
                 'payment_type' => $request->payment_type,
-                'payment_status' => 2,
-                'order_status' => 1,
+                'payment_status' => 2, // Unpaid
+                'order_status' => 1, // Pending
                 'date' => now(),
-                'note' => $request->note
+                'note' => $request->note ?? null
             ]);
 
-             $order->number = $order->id;
-             $order->save();
+            // Set order number (using order ID)
+            $order->number = $order->id;
+            $order->save();
 
-            foreach ($orderProducts as &$op) {
-                $op['order_id'] = $order->id;
+            // Update order_id in orderProducts array
+            foreach ($orderProducts as &$orderProduct) {
+                $orderProduct['order_id'] = $order->id;
             }
 
+            // Insert order products
             OrderProduct::insert($orderProducts);
 
-            Cart::where('user_id', $user->id)->where('status', 1)->update(['status' => 2]);
+            // Mark cart items as ordered (status = 2)
+            Cart::where('user_id', $user->id)
+                ->where('status', 1)
+                ->update(['status' => 2]);
+
+            // Load order with relationships for response
+            $order->load([
+                'orderProducts',
+                'orderProducts.product',
+                'orderProducts.product.images',
+                'orderProducts.variation',
+                'orderProducts.variation.color',
+                'orderProducts.variation.size',
+                'address'
+            ]);
 
             DB::commit();
-            return $this->success_response('Order created successfully', $order);
+
+            return $this->success_response('Order created successfully', [
+                'order' => $order,
+                'order_summary' => [
+                    'subtotal' => $totalBeforeTax,
+                    'tax_total' => $totalTax,
+                    'delivery_fee' => $deliveryFee,
+                    'coupon_discount' => $couponDiscount,
+                    'product_discount' => $totalDiscount,
+                    'final_total' => $totalFinal,
+                    'items_count' => $cartItems->sum('quantity')
+                ]
+            ]);
+
         } catch (\Exception $e) {
             DB::rollback();
-            return $this->error_response('Failed to create order', $e->getMessage());
+            \Log::error('Order creation failed: ' . $e->getMessage());
+            return $this->error_response('Failed to create order', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
         }
     }
 

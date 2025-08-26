@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name_en');
             $table->string('name_ar');
             $table->string('photo');
+            $table->enum('gender', ['man', 'woman', 'both'])->default('both');
             $table->timestamps();
         });
     }

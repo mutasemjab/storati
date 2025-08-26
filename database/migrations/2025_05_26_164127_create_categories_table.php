@@ -20,13 +20,10 @@ return new class extends Migration
             $table->string('photo');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->enum('gender', ['man', 'woman', 'both'])->default('both');
             $table->timestamps();
         });
 
-          DB::table('categories')->insert([
-            ['name_en'=>'Hair Care','name_ar'=>'عناية شعر','photo'=>'images.png'],
-            ['name_en'=>'Make up','name_ar'=>'مكياج','photo'=>'images.png']
-          ]);
     }
 
     /**
