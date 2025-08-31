@@ -67,9 +67,7 @@
                                             onclick="openWalletModal('{{ $user->id }}', '{{ addslashes($user->name) }}', '{{ $user->balance }}')">
                                         <i class="fas fa-wallet"></i>
                                     </button>
-                                    <a href="{{ route('users.points.history', $user->id) }}" class="btn btn-warning btn-sm" title="{{ __('messages.Points_History') }}">
-                                        <i class="fas fa-star"></i>
-                                    </a>
+                                  
                                 </div>
                             </td>
                         </tr>

@@ -152,17 +152,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         });
 
         Route::get('/celebrities/{celebrity}/stories/{story}', [CelebrityStoriesController::class, 'show'])->name('celebrity-stories.show');
-
-
-
-
-
-
-
-
-
-
-
     });
 });
 
