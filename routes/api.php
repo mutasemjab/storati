@@ -39,6 +39,8 @@ Route::group(['prefix' => 'v1/user'], function () {
     //---------------- Auth --------------------//
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/google-login', [AuthController::class, 'googleLogin']);
+    Route::post('/apple-login', [AuthController::class, 'appleLogin']);
     Route::get('/banners', [BannerController::class, 'index']);
 
     Route::get('/settings', [SettingController::class, 'index']);
