@@ -365,6 +365,10 @@ class AuthController extends Controller
     {
         $user = auth()->user();
 
+        if(!$user){
+             return $this->error_response('Unauthenticated', [], 401);
+        }
+
         $notifications = Notification::query()
             ->where(function ($query) use ($user) {
                 $query->where('type', 0)

@@ -17,13 +17,18 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
+        $user = auth()->user();
+        
+        if(!$user){
+             return $this->error_response('Unauthenticated', [], 401);
+        }
         $cart = Cart::with([
             'product', 
             'product.images', 
             'variation', 
             'variation.color', 
             'variation.size'
-        ])->where('user_id', $request->user()->id)
+        ])->where('user_id',  $user->id)
           ->where('status', 1)
           ->get();
 
@@ -67,6 +72,12 @@ class CartController extends Controller
             'quantity' => 'required|integer',
         ]);
 
+        $user = auth()->user();
+        
+        if(!$user){
+             return $this->error_response('Unauthenticated', [], 401);
+        }
+
         $product = Product::find($request->product_id);
         $variation = null;
         $price = $product->price_after_discount ?? $product->price;
@@ -84,7 +95,7 @@ class CartController extends Controller
             $price += $variation->price_adjustment;
         }
 
-        $userId = $request->user()->id;
+        $userId =  $user->id;
 
         // Check if the same product with same variation already exists in cart
         $cart = Cart::where('user_id', $userId)

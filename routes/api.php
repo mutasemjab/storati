@@ -72,9 +72,6 @@ Route::group(['prefix' => 'v1/user'], function () {
         Route::get('/active', [AuthController::class, 'active']);
         Route::post('/stories/{storyId}/view', [HomeController::class, 'viewStory']);
 
-        // image for chat
-        Route::get('/uploadPhotoVoice', [UploadPhotoVoiceController::class, 'index']);
-        Route::post('/uploadPhotoVoice', [UploadPhotoVoiceController::class, 'store']);
 
         Route::post('/update_profile', [AuthController::class, 'updateProfile']);
         Route::post('/delete_account', [AuthController::class, 'deleteAccount']);
@@ -113,13 +110,12 @@ Route::group(['prefix' => 'v1/user'], function () {
         Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
         // End Ecommerce
 
-        Route::prefix('points')->group(function () {
-        // Get points transactions history
-        Route::get('/', [PointsController::class, 'index']); 
-        // Convert points to money
-        Route::post('/convert', [PointsController::class, 'convertPointsToMoney']);
-        });
-        // End the Provider Display in user app
+        // Route::prefix('points')->group(function () {
+        // // Get points transactions history
+        // Route::get('/', [PointsController::class, 'index']); 
+        // // Convert points to money
+        // Route::post('/convert', [PointsController::class, 'convertPointsToMoney']);
+        // });
 
     });
 });
