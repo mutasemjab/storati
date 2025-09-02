@@ -28,7 +28,7 @@ class ProductController extends Controller
                 'discount_only' => 'nullable|boolean',
                 'is_featured' => 'nullable|in:1,2',
                 'my_collabs' => 'nullable|in:1,2',
-                'sort_by' => 'nullable|in:name,price,created_at,price_after_discount',
+                'sort_by' => 'nullable|in:name,price,created_at,price_after_discount,updated_at',
                 'sort_direction' => 'nullable|in:asc,desc',
                 'per_page' => 'nullable|integer|min:1|max:100',
                 'page' => 'nullable|integer|min:1'
@@ -133,18 +133,36 @@ class ProductController extends Controller
                 $query->where('my_collabs', $validated['my_collabs']);
             }
 
-            // Apply sorting
+            // Apply sorting - DEFAULT: Newest first (created_at DESC)
             $sortBy = $validated['sort_by'] ?? 'created_at';
             $sortDirection = $validated['sort_direction'] ?? 'desc';
 
-            if ($sortBy === 'name') {
-                // Sort by name (you can choose English or Arabic, or both)
-                $query->orderBy('name_en', $sortDirection);
-            } elseif ($sortBy === 'price') {
-                // Sort by actual selling price (considering discount)
-                $query->orderByRaw("COALESCE(price_after_discount, price) {$sortDirection}");
-            } else {
-                $query->orderBy($sortBy, $sortDirection);
+            switch ($sortBy) {
+                case 'name':
+                    // Sort by name (English first, then Arabic as fallback)
+                    $query->orderBy('name_en', $sortDirection)
+                        ->orderBy('name_ar', $sortDirection);
+                    break;
+                    
+                case 'price':
+                    // Sort by actual selling price (considering discount)
+                    $query->orderByRaw("COALESCE(price_after_discount, price) {$sortDirection}")
+                        ->orderBy('created_at', 'desc'); // Secondary sort by newest
+                    break;
+                    
+                case 'price_after_discount':
+                    // Sort specifically by discounted price
+                    $query->orderByRaw("COALESCE(price_after_discount, price) {$sortDirection}")
+                        ->orderBy('created_at', 'desc');
+                    break;
+                    
+                case 'created_at':
+                case 'updated_at':
+                default:
+                    // Sort by date (newest first by default)
+                    $query->orderBy($sortBy, $sortDirection)
+                        ->orderBy('id', 'desc'); // Secondary sort for consistent results
+                    break;
             }
 
             // Get pagination parameters
@@ -159,6 +177,11 @@ class ProductController extends Controller
                 $product->final_price = $product->price_after_discount ?? $product->price;
                 $product->has_discount = !is_null($product->discount_percentage) && $product->discount_percentage > 0;
                 $product->savings = $product->has_discount ? ($product->price - $product->final_price) : 0;
+                
+                // Add formatted dates for easier frontend usage
+                $product->created_at_formatted = $product->created_at->format('Y-m-d H:i:s');
+                $product->updated_at_formatted = $product->updated_at->format('Y-m-d H:i:s');
+                
                 return $product;
             });
 
@@ -175,8 +198,14 @@ class ProductController extends Controller
                     'to' => $products->lastItem(),
                     'has_more_pages' => $products->hasMorePages()
                 ],
+                'sorting' => [
+                    'sort_by' => $sortBy,
+                    'sort_direction' => $sortDirection,
+                    'default_sort' => 'newest_first'
+                ],
                 'filters_applied' => array_filter($validated) // Show which filters were applied
             ], 200);
+            
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,

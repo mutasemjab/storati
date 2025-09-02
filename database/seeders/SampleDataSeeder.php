@@ -44,19 +44,19 @@ class SampleDataSeeder extends Seeder
             [
                 'name_en' => 'Will Smith',
                 'name_ar' => 'ويل سميث',
-                'photo' => 'sample_celebrity_male.jpg',
+                'photo' => 'ce1.jpg',
                 'gender' => 'man'
             ],
             [
                 'name_en' => 'Emma Watson',
                 'name_ar' => 'إيما واتسون',
-                'photo' => 'sample_celebrity_female.jpg',
+                'photo' => 'ce2.jpg',
                 'gender' => 'woman'
             ],
             [
                 'name_en' => 'Ryan Reynolds',
                 'name_ar' => 'رايان رينولدز',
-                'photo' => 'sample_celebrity_both.jpg',
+                'photo' => 'de3.jpg',
                 'gender' => 'both'
             ]
         ];
@@ -84,25 +84,25 @@ class SampleDataSeeder extends Seeder
             [
                 'name_en' => 'Nike',
                 'name_ar' => 'نايك',
-                'photo' => 'sample_brand_both.jpg',
+                'photo' => 'nike.jpg',
                 'gender' => 'both'
             ],
             [
                 'name_en' => 'Victoria\'s Secret',
                 'name_ar' => 'فيكتوريا سيكريت',
-                'photo' => 'sample_brand_women.jpg',
+                'photo' => 'secret.jpg',
                 'gender' => 'woman'
             ],
             [
                 'name_en' => 'Hugo Boss',
                 'name_ar' => 'هوجو بوس',
-                'photo' => 'sample_brand_men.jpg',
+                'photo' => 'boss.jpg',
                 'gender' => 'man'
             ],
             [
                 'name_en' => 'Adidas',
                 'name_ar' => 'أديداس',
-                'photo' => 'sample_brand_unisex.jpg',
+                'photo' => 'adidas.jpg',
                 'gender' => 'both'
             ]
         ];
@@ -130,25 +130,25 @@ class SampleDataSeeder extends Seeder
             [
                 'name_en' => 'Fashion Store',
                 'name_ar' => 'متجر الأزياء',
-                'photo' => 'sample_shop_both.jpg',
+                'photo' => 'shop1.jpg',
                 'gender' => 'both'
             ],
             [
                 'name_en' => 'Men\'s Warehouse',
                 'name_ar' => 'مستودع الرجال',
-                'photo' => 'sample_shop_men.jpg',
+                'photo' => 'shop2.jpg',
                 'gender' => 'man'
             ],
             [
                 'name_en' => 'Ladies Boutique',
                 'name_ar' => 'بوتيك السيدات',
-                'photo' => 'sample_shop_women.jpg',
+                'photo' => 'shop3.jpg',
                 'gender' => 'woman'
             ],
             [
                 'name_en' => 'Universal Mall',
                 'name_ar' => 'المول العالمي',
-                'photo' => 'sample_shop_universal.jpg',
+                'photo' => 'shop4.jpg',
                 'gender' => 'both'
             ]
         ];
@@ -176,35 +176,35 @@ class SampleDataSeeder extends Seeder
             [
                 'name_en' => 'Clothing',
                 'name_ar' => 'الملابس',
-                'photo' => 'sample_category_clothing.jpg',
+                'photo' => 'clothing.jpg',
                 'gender' => 'both',
                 'category_id' => null
             ],
             [
                 'name_en' => 'Men\'s Shirts',
                 'name_ar' => 'قمصان الرجال',
-                'photo' => 'sample_category_mens_shirts.jpg',
+                'photo' => 'men.jpg',
                 'gender' => 'man',
                 'category_id' => 1 // Will be updated after parent is created
             ],
             [
                 'name_en' => 'Women\'s Dresses',
                 'name_ar' => 'فساتين النساء',
-                'photo' => 'sample_category_womens_dresses.jpg',
+                'photo' => 'women.jpg',
                 'gender' => 'woman',
                 'category_id' => 1 // Will be updated after parent is created
             ],
             [
                 'name_en' => 'Shoes',
                 'name_ar' => 'الأحذية',
-                'photo' => 'sample_category_shoes.jpg',
+                'photo' => 'accs.jpg',
                 'gender' => 'both',
                 'category_id' => null
             ],
             [
                 'name_en' => 'Accessories',
                 'name_ar' => 'الإكسسوارات',
-                'photo' => 'sample_category_accessories.jpg',
+                'photo' => 'accs.jpg',
                 'gender' => 'both',
                 'category_id' => null
             ]
