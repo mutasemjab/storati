@@ -23,40 +23,6 @@ class CouponController extends Controller
         return $this->success_response('Available coupons', $coupons);
     }
 
-    /**
-     * Validate a coupon code for a specific user and cart total.
-     */
-    public function validateCoupon(Request $request)
-    {
-        $request->validate([
-            'coupon_code' => 'required|string',
-            'total_amount' => 'required|numeric|min:0'
-        ]);
-
-        $user = $request->user();
-
-        $coupon = Coupon::where('code', $request->coupon_code)
-            ->whereDate('expired_at', '>=', now())
-            ->first();
-
-        if (!$coupon) {
-            return $this->error_response('Coupon not found or expired', []);
-        }
-
-        // Check if user already used this coupon
-        $alreadyUsed = UserCoupon::where('user_id', $user->id)
-            ->where('coupon_id', $coupon->id)
-            ->exists();
-
-        if ($alreadyUsed) {
-            return $this->error_response('Coupon already used by this user', []);
-        }
-
-        if ($request->total_amount < $coupon->minimum_total) {
-            return $this->error_response("Minimum total amount for this coupon is {$coupon->minimum_total}", []);
-        }
-
-        return $this->success_response('Coupon is valid', $coupon);
-    }
+ 
 }
 

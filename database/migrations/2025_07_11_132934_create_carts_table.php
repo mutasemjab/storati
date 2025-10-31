@@ -21,6 +21,9 @@ return new class extends Migration
             $table->foreign('variation_id')->references('id')->on('variations')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('coupon_id')->nullable()->after('user_id');
+            $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('set null');
+
             $table->integer('quantity');
             $table->double('price');
             $table->double('total_price_product');

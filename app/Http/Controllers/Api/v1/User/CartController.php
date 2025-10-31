@@ -3,8 +3,10 @@ namespace App\Http\Controllers\Api\v1\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\UserCoupon;
 use App\Models\Variation;
 use App\Traits\Responses;
 use Illuminate\Http\Request;
@@ -22,6 +24,7 @@ class CartController extends Controller
         if(!$user){
              return $this->error_response('Unauthenticated', [], 401);
         }
+
         $cart = Cart::with([
             'product', 
             'product.images', 
@@ -33,6 +36,8 @@ class CartController extends Controller
           ->get();
 
         $cartData = [];
+        $subtotal = 0;
+
         foreach ($cart as $item) {
             $cartData[] = [
                 'id' => $item->id,
@@ -59,9 +64,45 @@ class CartController extends Controller
                 ] : null,
                 'created_at' => $item->created_at->toISOString(),
             ];
+
+            $subtotal += $item->total_price_product;
         }
 
-        return $this->success_response('Cart retrieved successfully', $cartData);
+        // Get applied coupon and recalculate discount
+        $couponDiscount = 0;
+        $appliedCoupon = null;
+
+        if ($cart->first() && $cart->first()->coupon_id) {
+            $coupon = Coupon::find($cart->first()->coupon_id);
+            if ($coupon) {
+                // Calculate percentage discount
+                $couponDiscount = ($subtotal * $coupon->amount) / 100;
+
+                // Update discount in all cart items
+                Cart::where('user_id', $user->id)
+                    ->where('status', 1)
+                    ->update(['discount_coupon' => $couponDiscount]);
+
+                $appliedCoupon = [
+                    'code' => $coupon->code,
+                    'percentage' => $coupon->amount,
+                    'discount' => $couponDiscount
+                ];
+            }
+        }
+
+        $summary = [
+            'subtotal' => $subtotal,
+            'coupon_discount' => $couponDiscount,
+            'total' => $subtotal - $couponDiscount,
+            'items_count' => $cart->sum('quantity'),
+            'applied_coupon' => $appliedCoupon
+        ];
+
+        return $this->success_response('Cart retrieved successfully', [
+            'items' => $cartData,
+            'summary' => $summary
+        ]);
     }
 
     public function store(Request $request)
@@ -97,6 +138,10 @@ class CartController extends Controller
 
         $userId =  $user->id;
 
+        // Get existing coupon if any
+        $existingCart = Cart::where('user_id', $userId)->where('status', 1)->first();
+        $couponId = $existingCart ? $existingCart->coupon_id : null;
+
         // Check if the same product with same variation already exists in cart
         $cart = Cart::where('user_id', $userId)
                     ->where('product_id', $request->product_id)
@@ -109,8 +154,6 @@ class CartController extends Controller
             $cart->quantity += $request->quantity;
             $cart->total_price_product = $cart->price * $cart->quantity;
             $cart->save();
-
-            return $this->success_response('Cart updated with new quantity', $cart);
         } else {
             // Create new cart item
             $cart = Cart::create([
@@ -120,11 +163,94 @@ class CartController extends Controller
                 'quantity' => $request->quantity,
                 'price' => $price,
                 'total_price_product' => $price * $request->quantity,
+                'coupon_id' => $couponId,
                 'status' => 1
             ]);
-
-            return $this->success_response('Product added to cart', $cart);
         }
+
+        return $this->success_response('Product added to cart', $cart);
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'coupon_code' => 'required|string'
+        ]);
+
+        $user = $request->user();
+        
+        if(!$user){
+             return $this->error_response('Unauthenticated', [], 401);
+        }
+
+        // Get cart total
+        $cartItems = Cart::where('user_id', $user->id)->where('status', 1)->get();
+        
+        if ($cartItems->isEmpty()) {
+            return $this->error_response('Cart is empty', []);
+        }
+
+        $subtotal = $cartItems->sum('total_price_product');
+
+        // Validate coupon
+        $coupon = Coupon::where('code', $request->coupon_code)
+            ->whereDate('expired_at', '>=', now())
+            ->first();
+
+        if (!$coupon) {
+            return $this->error_response('Coupon not found or expired', []);
+        }
+
+        // Check if already used
+        $alreadyUsed = UserCoupon::where('user_id', $user->id)
+            ->where('coupon_id', $coupon->id)
+            ->exists();
+
+        if ($alreadyUsed) {
+            return $this->error_response('Coupon already used', []);
+        }
+
+        // Check minimum total
+        if ($subtotal < $coupon->minimum_total) {
+            return $this->error_response("Minimum total is {$coupon->minimum_total}", []);
+        }
+
+        // Calculate percentage discount
+        $discount = ($subtotal * $coupon->amount) / 100;
+
+        // Apply to all cart items
+        Cart::where('user_id', $user->id)
+            ->where('status', 1)
+            ->update([
+                'coupon_id' => $coupon->id,
+                'discount_coupon' => $discount
+            ]);
+
+        return $this->success_response('Coupon applied successfully', [
+            'coupon_code' => $coupon->code,
+            'percentage' => $coupon->amount,
+            'discount_amount' => $discount,
+            'total_before' => $subtotal,
+            'total_after' => $subtotal - $discount
+        ]);
+    }
+
+    public function removeCoupon(Request $request)
+    {
+        $user = $request->user();
+        
+        if(!$user){
+             return $this->error_response('Unauthenticated', [], 401);
+        }
+
+        Cart::where('user_id', $user->id)
+            ->where('status', 1)
+            ->update([
+                'coupon_id' => null,
+                'discount_coupon' => null
+            ]);
+
+        return $this->success_response('Coupon removed successfully', []);
     }
 
     public function delete($id)
@@ -139,5 +265,4 @@ class CartController extends Controller
 
         return $this->success_response('Cart item deleted', []);
     }
-   
 }

@@ -100,14 +100,15 @@ Route::group(['prefix' => 'v1/user'], function () {
         Route::get('/cart', [CartController::class, 'index']);
         Route::post('/cart', [CartController::class, 'store']);
         Route::delete('/cart/{id}', [CartController::class, 'delete']);
-
+        Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon']);
+        Route::post('/cart/remove-coupon', [CartController::class, 'removeCoupon']);
+        
         Route::get('/orders', [OrderController::class, 'index']);
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{id}', [OrderController::class, 'details']);
         Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
 
         Route::get('/coupons', [CouponController::class, 'index']);
-        Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
         // End Ecommerce
 
         // Route::prefix('points')->group(function () {
