@@ -31,7 +31,7 @@
                                      alt="Banner" 
                                      style="width: 100px; height: 60px; object-fit: cover;">
                             </td>
-                            <td>{{ $banner->celebrity->name ?? __('messages.none') }}</td>
+                            <td>{{ $banner->celebrity->name_ar ?? __('messages.none') }}</td>
                             <td>{{ $banner->created_at->format('Y-m-d') }}</td>
                             <td>
                                 <a href="{{ route('banner-celebrities.edit', $banner) }}" 

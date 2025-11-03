@@ -42,7 +42,7 @@
                                 @foreach($celebrities as $celebrity)
                                     <option value="{{ $celebrity->id }}" 
                                             {{ (old('celebrity_id', $bannerCelebrity->celebrity_id) == $celebrity->id) ? 'selected' : '' }}>
-                                        {{ $celebrity->name }}
+                                        {{ $celebrity->name_ar }}
                                     </option>
                                 @endforeach
                             </select>
