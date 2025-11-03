@@ -36,6 +36,10 @@ class Celebrity extends Model
     {
         return $this->hasMany(Product::class);
     }
+      public function banners()
+    {
+        return $this->hasMany(BannerCelebrity::class);
+    }
 
       public function stories()
     {

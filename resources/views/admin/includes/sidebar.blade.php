@@ -82,6 +82,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('banner-celebrities.index') }}"
+                                class="nav-link {{ request()->routeIs('banner-celebrities.*') ? 'active' : '' }}">
+                                <i class="fas fa-handshake nav-icon"></i>
+                                <p>{{ __('messages.banner_celebrities') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('brands.index') }}"
                                 class="nav-link {{ request()->routeIs('brands.*') ? 'active' : '' }}">
                                 <i class="fas fa-list nav-icon"></i>

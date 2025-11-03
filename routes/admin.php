@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\BannerCelebrityController;
 use App\Http\Controllers\Admin\ShopController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -107,6 +108,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         Route::resource('shops', ShopController::class);
         Route::resource('brands', BrandController::class);
         Route::resource('celebrities', CelebrityController::class);
+        Route::resource('banner-celebrities', BannerCelebrityController::class);
 
         Route::resource('settings', SettingController::class);
         Route::resource('users', UserController::class);

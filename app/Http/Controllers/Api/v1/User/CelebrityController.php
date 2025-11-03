@@ -29,7 +29,7 @@ class CelebrityController extends Controller
      public function getProductsFromCelebrity($id)
      {
          
-         $celebrities = Celebrity::with('products','products.images','products.ratings')->where('id',$id)->get();
+         $celebrities = Celebrity::with('banners','products','products.images','products.ratings')->where('id',$id)->get();
          
          return $this->success_response('Celebrity retrieved successfully', $celebrities);
      }
