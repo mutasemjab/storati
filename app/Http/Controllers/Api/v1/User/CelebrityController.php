@@ -21,7 +21,7 @@ class CelebrityController extends Controller
      public function index()
      {
          
-         $celebrities = Celebrity::get();
+         $celebrities = Celebrity::with('banners','products','products.images','products.ratings')->get();
          
          return $this->success_response('Celebrity retrieved successfully', $celebrities);
      }

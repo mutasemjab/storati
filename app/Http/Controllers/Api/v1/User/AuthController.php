@@ -369,14 +369,7 @@ class AuthController extends Controller
              return $this->error_response('Unauthenticated', [], 401);
         }
 
-        $notifications = Notification::query()
-            ->where(function ($query) use ($user) {
-                $query->where('type', 0)
-                    ->orWhere('type', 1)
-                    ->orWhere('user_id', $user->id);
-            })
-            ->orderBy('id', 'DESC')
-            ->get();
+        $notifications = Notification::orderBy('id', 'DESC')->get();
 
         return $this->success_response('Notifications retrieved successfully', $notifications);
     }
