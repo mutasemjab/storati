@@ -18,9 +18,9 @@ class BannerController extends Controller
      */
     public function index()
     {
-        $data= Banner::paginate(PAGINATION_COUNT);
+        $data = Banner::paginate(PAGINATION_COUNT);
 
-        return view('admin.banners.index',compact('data'));
+        return view('admin.banners.index', compact('data'));
     }
 
     public function create()
@@ -31,7 +31,7 @@ class BannerController extends Controller
 
 
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'photo' => 'required|image',
@@ -57,11 +57,11 @@ class BannerController extends Controller
     }
 
 
-     public function edit($id)
+    public function edit($id)
     {
         $data = Banner::findOrFail($id);
         $products = Product::get();
-        return view('admin.banners.edit', compact('data', 'products', 'providerTypes'));
+        return view('admin.banners.edit', compact('data', 'products',));
     }
 
     /**
@@ -80,11 +80,11 @@ class BannerController extends Controller
             if ($request->has('photo')) {
                 $the_file_path = uploadImage('assets/admin/uploads', $request->photo);
                 $banner->photo = $the_file_path;
-             }
+            }
 
 
             $banner->product_id = $request->product_id;
-          
+
 
 
             if ($banner->save()) {
@@ -110,32 +110,29 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-       try {
+        try {
 
-            $item_row = Banner::select("id")->where('id','=',$id)->first();
+            $item_row = Banner::select("id")->where('id', '=', $id)->first();
 
             if (!empty($item_row)) {
 
-        $flag = Banner::where('id','=',$id)->delete();
+                $flag = Banner::where('id', '=', $id)->delete();
 
-        if ($flag) {
-            return redirect()->back()
-            ->with(['success' => '   Delete Succefully   ']);
+                if ($flag) {
+                    return redirect()->back()
+                        ->with(['success' => '   Delete Succefully   ']);
+                } else {
+                    return redirect()->back()
+                        ->with(['error' => '   Something Wrong']);
+                }
             } else {
-            return redirect()->back()
-            ->with(['error' => '   Something Wrong']);
+                return redirect()->back()
+                    ->with(['error' => '   cant reach fo this data   ']);
             }
-
-            } else {
-            return redirect()->back()
-            ->with(['error' => '   cant reach fo this data   ']);
-            }
-
-       } catch (\Exception $ex) {
+        } catch (\Exception $ex) {
 
             return redirect()->back()
-            ->with(['error' => ' Something Wrong   ' . $ex->getMessage()]);
-            }
+                ->with(['error' => ' Something Wrong   ' . $ex->getMessage()]);
+        }
     }
 }
-
