@@ -19,32 +19,36 @@ class NotificationController extends Controller
 
     public function send(Request $request)
     {
-        // Validate the input
         $this->validate($request, [
-            'title' => 'required',
-            'body' => 'required',
-            'type' => 'required|in:0,1,2,3,4', // Ensure valid type
-            'user_id' => 'nullable|required_if:type,4|exists:users,id', // If type = 4, user_id must be valid
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'type' => 'required|in:0,1', // 0 = all, 1 = single user
+            'user_id' => 'nullable|exists:users,id',
         ]);
-    
-        // Send notification via Firebase Cloud Messaging (FCM)
-        $response = FCMController::sendMessageToAll($request->title, $request->body);
-    
-        // Save the notification in the database
-        $noti = new Notification([
+
+        $sent = false;
+
+        if ($request->type == 0) {
+            // Send to all users
+            $sent = FCMController::sendMessageToAll($request->title, $request->body);
+        } elseif ($request->type == 1 && $request->user_id) {
+            // Send to a specific user
+            $sent = FCMController::sendMessageToUser($request->title, $request->body, $request->user_id);
+        }
+
+        // Save notification to DB
+        Notification::create([
             'title' => $request->title,
             'body' => $request->body,
-            'type' => $request->type,
-            'user_id' => $request->type == 4 ? $request->user_id : null, // Only store user_id if type = 4
+            'user_id' => $request->type == 1 ? $request->user_id : null,
         ]);
-    
-        $noti->save();
-    
-        if ($response) {
-            return redirect()->back()->with('message', 'Notification sent successfully');
+
+        if ($sent) {
+            return back()->with('message', '✅ Notification sent successfully');
         } else {
-            return redirect()->back()->with('error', 'Notification was not sent');
+            return back()->with('error', '⚠️ Notification failed to send');
         }
     }
+
 
 }

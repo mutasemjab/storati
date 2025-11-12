@@ -146,26 +146,6 @@ class FCMController extends BaseController
         return $sent;
     }
     
-    public static function sendMessageToProvider($title, $body, $provider_id): bool
-    {
-        // Find the provider by the provided provider_id
-        $provider = Provider::find($provider_id); // Adjust model name if different
-        
-        // Check if provider exists and has an FCM token
-        if (!$provider || is_null($provider->fcm_token)) {
-            \Log::error("Provider not found or has no FCM token for provider ID " . $provider_id);
-            return false;
-        }
-        
-        // Send the message using the FCM token
-        $sent = self::sendMessage($title, $body, $provider->fcm_token, $provider->id);
-        
-        // Log an error if sending fails
-        if (!$sent) {
-            \Log::error("FCM notification failed for provider ID " . $provider->id);
-        }
-        
-        return $sent;
-    }
+   
 
 }
