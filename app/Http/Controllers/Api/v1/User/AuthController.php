@@ -29,6 +29,26 @@ class AuthController extends Controller
         return $this->success_response('User retrieved successfully', $user);
     }
 
+    public function updateFcmToken(Request $request)
+    {
+        $user = auth()->user();
+
+        // Validate request
+        $request->validate([
+            'fcm_token' => 'required|string',
+        ]);
+
+        // Update user's FCM token
+        $user->update([
+            'fcm_token' => $request->fcm_token,
+        ]);
+
+        return $this->success_response('FCM token updated successfully', [
+            'fcm_token' => $user->fcm_token,
+        ]);
+    }
+
+
     public function deleteAccount(Request $request)
     {
         try {

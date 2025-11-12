@@ -71,6 +71,7 @@ Route::group(['prefix' => 'v1/user'], function () {
 
         Route::get('/active', [AuthController::class, 'active']);
         Route::post('/stories/{storyId}/view', [HomeController::class, 'viewStory']);
+        Route::post('/updateFcmToken', [AuthController::class, 'updateFcmToken']);
 
 
         Route::post('/update_profile', [AuthController::class, 'updateProfile']);
