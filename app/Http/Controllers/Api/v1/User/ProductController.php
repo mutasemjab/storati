@@ -143,19 +143,19 @@ class ProductController extends Controller
                     $query->orderBy('name_en', $sortDirection)
                         ->orderBy('name_ar', $sortDirection);
                     break;
-                    
+
                 case 'price':
                     // Sort by actual selling price (considering discount)
                     $query->orderByRaw("COALESCE(price_after_discount, price) {$sortDirection}")
                         ->orderBy('created_at', 'desc'); // Secondary sort by newest
                     break;
-                    
+
                 case 'price_after_discount':
                     // Sort specifically by discounted price
                     $query->orderByRaw("COALESCE(price_after_discount, price) {$sortDirection}")
                         ->orderBy('created_at', 'desc');
                     break;
-                    
+
                 case 'created_at':
                 case 'updated_at':
                 default:
@@ -174,14 +174,19 @@ class ProductController extends Controller
 
             // Transform the data to include computed fields
             $products->getCollection()->transform(function ($product) {
+                $cx = currency();
+
+                // Convert prices
+                $product->price                = $cx->convert($product->price);
+                $product->price_after_discount = $cx->convert($product->price_after_discount);
+
                 $product->final_price = $product->price_after_discount ?? $product->price;
-                $product->has_discount = !is_null($product->discount_percentage) && $product->discount_percentage > 0;
+                $product->has_discount = !is_null($product->price_after_discount) && $product->price_after_discount > 0;
                 $product->savings = $product->has_discount ? ($product->price - $product->final_price) : 0;
-                
-                // Add formatted dates for easier frontend usage
+
                 $product->created_at_formatted = $product->created_at->format('Y-m-d H:i:s');
                 $product->updated_at_formatted = $product->updated_at->format('Y-m-d H:i:s');
-                
+
                 return $product;
             });
 
@@ -189,6 +194,7 @@ class ProductController extends Controller
                 'status' => true,
                 'message' => 'Products retrieved successfully',
                 'data' => $products->items(),
+                  'currency'   => currency()->meta(), 
                 'pagination' => [
                     'current_page' => $products->currentPage(),
                     'per_page' => $products->perPage(),
@@ -205,7 +211,6 @@ class ProductController extends Controller
                 ],
                 'filters_applied' => array_filter($validated) // Show which filters were applied
             ], 200);
-            
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -273,30 +278,38 @@ class ProductController extends Controller
         }
     }
 
-        public function productDetails($id)
+    public function productDetails($id)
     {
-        // Get the main product
         $product = Product::with('images', 'ratings', 'variations', 'variations.color', 'variations.size')
-            ->where('id', $id)
-            ->first();
-        
+            ->where('id', $id)->first();
+
         if (!$product) {
             return $this->error_response('Product not found', [], 404);
         }
-        
-        // Get similar products from the same category (excluding the current product)
+
         $similarProducts = Product::with('images', 'ratings', 'variations', 'variations.color', 'variations.size')
-            ->where('category_id', $product->category_id) // assuming you have a category_id field
-            ->where('id', '!=', $id) // exclude the current product
-            ->limit(10) // limit the number of similar products
-            ->get();
-        
-        // Combine the data
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $id)
+            ->limit(10)->get();
+
+        // Apply currency conversion
+        $cx = currency();
+        $convertProduct = function ($p) use ($cx) {
+            $p->price                = $cx->convert($p->price);
+            $p->price_after_discount = $cx->convert($p->price_after_discount);
+            // Recompute helpers that depend on price
+            $p->final_price  = $p->price_after_discount ?? $p->price;
+            $p->has_discount = !is_null($p->price_after_discount);
+            $p->savings      = $p->has_discount ? ($p->price - $p->final_price) : 0;
+            return $p;
+        };
+
         $response = [
-            'product' => $product,
-            'similar_products' => $similarProducts
+            'product'          => $convertProduct($product),
+            'similar_products' => $similarProducts->map($convertProduct),
+            'currency'         => $cx->meta(),
         ];
-        
+
         return $this->success_response('Product retrieved successfully', $response);
     }
 }

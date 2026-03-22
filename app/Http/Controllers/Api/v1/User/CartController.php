@@ -25,6 +25,7 @@ class CartController extends Controller
              return $this->error_response('Unauthenticated', [], 401);
         }
 
+            $cx = currency();
         $cart = Cart::with([
             'product', 
             'product.images', 
@@ -42,8 +43,8 @@ class CartController extends Controller
             $cartData[] = [
                 'id' => $item->id,
                 'quantity' => $item->quantity,
-                'price' => $item->price,
-                'total_price_product' => $item->total_price_product,
+                'price'               => $cx->convert($item->price),
+                'total_price_product' => $cx->convert($item->total_price_product),
                 'product' => [
                     'id' => $item->product->id,
                     'name_en' => $item->product->name_en,
@@ -91,13 +92,18 @@ class CartController extends Controller
             }
         }
 
-        $summary = [
-            'subtotal' => $subtotal,
-            'coupon_discount' => $couponDiscount,
-            'total' => $subtotal - $couponDiscount,
-            'items_count' => $cart->sum('quantity'),
-            'applied_coupon' => $appliedCoupon
-        ];
+  
+ 
+$summary = [
+    'subtotal'        => $cx->convert($subtotal),
+    'coupon_discount' => $cx->convert($couponDiscount),
+    'total'           => $cx->convert($subtotal - $couponDiscount),
+    'items_count'     => $cart->sum('quantity'),
+    'applied_coupon'  => $appliedCoupon ? array_merge($appliedCoupon, [
+        'discount' => $cx->convert($appliedCoupon['discount']),
+    ]) : null,
+    'currency'        => $cx->meta(),
+];
 
         return $this->success_response('Cart retrieved successfully', [
             'items' => $cartData,
@@ -227,12 +233,13 @@ class CartController extends Controller
             ]);
 
         return $this->success_response('Coupon applied successfully', [
-            'coupon_code' => $coupon->code,
-            'percentage' => $coupon->amount,
-            'discount_amount' => $discount,
-            'total_before' => $subtotal,
-            'total_after' => $subtotal - $discount
-        ]);
+    'coupon_code'    => $coupon->code,
+    'percentage'     => $coupon->amount,
+    'discount_amount'=> currency()->convert($discount),
+    'total_before'   => currency()->convert($subtotal),
+    'total_after'    => currency()->convert($subtotal - $discount),
+    'currency'       => currency()->meta(),
+]);
     }
 
     public function removeCoupon(Request $request)

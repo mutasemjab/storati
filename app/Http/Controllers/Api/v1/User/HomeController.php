@@ -39,7 +39,6 @@ class HomeController extends Controller
                 __('messages.Home data retrieved successfully'),
                 $homeData
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching home data'),
@@ -63,7 +62,6 @@ class HomeController extends Controller
                 __('messages.Stories retrieved successfully'),
                 $storiesData
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching stories'),
@@ -87,7 +85,6 @@ class HomeController extends Controller
                 __('messages.My Collabs products retrieved successfully'),
                 $productsData
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching My Collabs products'),
@@ -108,7 +105,6 @@ class HomeController extends Controller
                 __('messages.Banners retrieved successfully'),
                 $bannersData
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching banners'),
@@ -132,7 +128,6 @@ class HomeController extends Controller
                 __('messages.Shops retrieved successfully'),
                 $shopsData
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching shops'),
@@ -150,7 +145,7 @@ class HomeController extends Controller
             $locale = $request->header('Accept-Language', 'en');
             app()->setLocale($locale);
 
-            $celebrity = Celebrity::with(['activeStories' => function($query) {
+            $celebrity = Celebrity::with(['activeStories' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             }])->find($celebrityId);
 
@@ -193,7 +188,6 @@ class HomeController extends Controller
                 __('messages.Celebrity stories retrieved successfully'),
                 $data
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching celebrity stories'),
@@ -205,7 +199,7 @@ class HomeController extends Controller
     /**
      * Mark story as viewed (increment view count) and return story details
      */
-     public function viewStory(Request $request, $storyId)
+    public function viewStory(Request $request, $storyId)
     {
         try {
             $locale = $request->header('Accept-Language', 'en');
@@ -231,7 +225,7 @@ class HomeController extends Controller
             // Get authenticated user using your custom guard
             $token = $request->bearerToken();
             $authenticatedUser = null;
-            
+
             if ($token) {
                 try {
                     $authenticatedUser = Auth::guard('user-api')->user();
@@ -252,7 +246,7 @@ class HomeController extends Controller
 
             // Mark story as viewed by this user (only once per user per story)
             $storyView = \App\Models\StoryView::markAsViewed($authenticatedUser->id, $story->id);
-            
+
             // Increment total views count only if this is a new view
             if ($storyView->wasRecentlyCreated) {
                 $story->increment('views_count');
@@ -285,7 +279,6 @@ class HomeController extends Controller
                 __('messages.Story viewed successfully'),
                 $data
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while viewing story'),
@@ -343,7 +336,6 @@ class HomeController extends Controller
                 __('messages.Story details retrieved successfully'),
                 $data
             );
-
         } catch (\Exception $e) {
             return $this->error_response(
                 __('messages.Error occurred while fetching story details'),
@@ -361,7 +353,7 @@ class HomeController extends Controller
     {
         // Get authenticated user using your custom guard
         $authenticatedUser = null;
-        
+
         // Try to get authenticated user from the user-api guard
         try {
             if (auth()->guard('user-api')->check()) {
@@ -371,7 +363,7 @@ class HomeController extends Controller
             // If authentication fails, continue as guest
             $authenticatedUser = null;
         }
-        
+
         // Also try to get from request bearer token if guard check fails
         if (!$authenticatedUser && $request) {
             $token = $request->bearerToken();
@@ -386,26 +378,26 @@ class HomeController extends Controller
                 }
             }
         }
-        
+
         $userId = $authenticatedUser ? $authenticatedUser->id : null;
 
         // Get celebrities that have active stories
-        $celebrities = Celebrity::with(['activeStories' => function($query) {
+        $celebrities = Celebrity::with(['activeStories' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }])
-        ->whereHas('activeStories')
-        ->orderBy('name_en')
-        ->get();
+            ->whereHas('activeStories')
+            ->orderBy('name_en')
+            ->get();
 
         $storiesData = [];
 
         foreach ($celebrities as $celebrity) {
             $stories = [];
             $hasUnseenStories = false;
-            
+
             foreach ($celebrity->activeStories as $story) {
                 $isViewedByUser = $userId ? $story->isViewedByUser($userId) : false;
-                
+
                 // If user hasn't viewed this story, mark celebrity as having unseen stories
                 // For guest users (no userId), all stories are considered unseen
                 if (!$isViewedByUser) {
@@ -476,7 +468,7 @@ class HomeController extends Controller
                 'final_price' => $product->price_after_discount ?: $product->price,
                 'is_discounted' => !is_null($product->discount_percentage) && $product->discount_percentage > 0,
                 'is_featured' => $product->is_featured == 1,
-                'images' => $product->images->map(function($image) {
+                'images' => $product->images->map(function ($image) {
                     return [
                         'id' => $image->id,
                         'photo' => $image->photo,
@@ -516,7 +508,7 @@ class HomeController extends Controller
             ->get();
 
         $productsData = [];
-
+        $cx = currency();
         foreach ($products as $product) {
             $productsData[] = [
                 'id' => $product->id,
@@ -526,14 +518,15 @@ class HomeController extends Controller
                 'description' => $locale === 'ar' ? $product->description_ar : $product->description_en,
                 'description_en' => $product->description_en,
                 'description_ar' => $product->description_ar,
-                'price' => $product->price,
+                'price'               => $cx->convert($product->price),
+                'price_after_discount' => $cx->convert($product->price_after_discount),
+                'final_price'         => $cx->convert($product->price_after_discount ?: $product->price),
                 'tax' => $product->tax,
                 'discount_percentage' => $product->discount_percentage,
-                'price_after_discount' => $product->price_after_discount,
-                'final_price' => $product->price_after_discount ?: $product->price,
                 'is_discounted' => !is_null($product->discount_percentage) && $product->discount_percentage > 0,
                 'is_featured' => $product->is_featured == 1,
-                'images' => $product->images->map(function($image) {
+                'currency'            => $cx->meta(),
+                'images' => $product->images->map(function ($image) {
                     return [
                         'id' => $image->id,
                         'photo' => $image->photo,

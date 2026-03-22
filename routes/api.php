@@ -65,6 +65,7 @@ Route::group(['prefix' => 'v1/user'], function () {
     Route::post('/products', [ProductController::class, 'getProducts']);
     
     Route::get('/home', [HomeController::class, 'getHomeData']);
+    Route::get('/currencies', [CurrencyController::class, 'index']);
 
     // Auth Route
     Route::group(['middleware' => ['auth:user-api']], function () {

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1\User;
 
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class OrderController extends Controller
 {
     use Responses;
 
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $orders = Order::with([
             'orderProducts',
@@ -46,12 +47,12 @@ class OrderController extends Controller
 
         try {
             $user = $request->user();
-            
+
             // Get cart items with product and variation relationships
             $cartItems = Cart::with(['product', 'variation', 'variation.color', 'variation.size'])
-                            ->where('user_id', $user->id)
-                            ->where('status', 1)
-                            ->get();
+                ->where('user_id', $user->id)
+                ->where('status', 1)
+                ->get();
 
             if ($cartItems->isEmpty()) {
                 return $this->error_response('Cart is empty', []);
@@ -216,18 +217,20 @@ class OrderController extends Controller
             DB::commit();
 
             return $this->success_response('Order created successfully', [
-                'order' => $order,
+                'order'         => $order,
                 'order_summary' => [
-                    'subtotal' => $totalBeforeTax,
-                    'tax_total' => $totalTax,
-                    'delivery_fee' => $deliveryFee,
-                    'coupon_discount' => $couponDiscount,
-                    'product_discount' => $totalDiscount,
-                    'final_total' => $totalFinal,
-                    'items_count' => $cartItems->sum('quantity')
-                ]
+                    'subtotal'          => currency()->convert($totalBeforeTax),
+                    'tax_total'         => currency()->convert($totalTax),
+                    'delivery_fee'      => currency()->convert($deliveryFee),
+                    'coupon_discount'   => currency()->convert($couponDiscount),
+                    'product_discount'  => currency()->convert($totalDiscount),
+                    'final_total'       => currency()->convert($totalFinal),
+                    'items_count'       => $cartItems->sum('quantity'),
+                    // Raw base-currency values (useful for payment gateways)
+                    'base_currency_total' => $totalFinal,
+                ],
+                'currency' => currency()->meta(),
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             \Log::error('Order creation failed: ' . $e->getMessage());
@@ -242,7 +245,7 @@ class OrderController extends Controller
 
     public function details($id)
     {
-        $order = Order::with('orderProducts','orderProducts.product','orderProducts.product.images')->find($id);
+        $order = Order::with('orderProducts', 'orderProducts.product', 'orderProducts.product.images')->find($id);
 
         if (!$order) {
             return $this->error_response('Order not found', []);
@@ -264,5 +267,4 @@ class OrderController extends Controller
 
         return $this->success_response('Order cancelled successfully', $order);
     }
-   
 }
